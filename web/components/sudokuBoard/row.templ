@@ -1,0 +1,19 @@
+package components
+
+import "github.com/deej-tsn/compSudoku/internal/models"
+
+templ Row(row models.Row) {
+    
+    <div class="row">
+        <hr class="bold">
+        for i, square := range row{
+            @Square(*square)
+            if i % 3 == 2 {
+                <hr class="bold">
+            } else{
+                <hr>
+            }
+        }
+
+    </div>
+}

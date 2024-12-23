@@ -1,0 +1,17 @@
+package components
+
+import "github.com/deej-tsn/compSudoku/internal/models"
+
+templ Grid(grid models.Grid) {
+    <div id="grid">
+        <hr class="bold">
+        for i, row := range grid{
+            @Row(row)
+            if i % 3 == 2{
+                <hr class="bold">
+            } else{
+                <hr>
+            }
+        }
+    </div>
+}

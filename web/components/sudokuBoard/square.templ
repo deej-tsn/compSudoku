@@ -1,0 +1,11 @@
+package components
+
+import "github.com/deej-tsn/compSudoku/internal/models"
+import "fmt"
+
+templ Square(square models.Square) {
+    <div class="square">
+        {fmt.Sprintf("%d",square.Value)}
+
+    </div>
+}
