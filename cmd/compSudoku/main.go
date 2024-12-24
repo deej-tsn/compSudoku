@@ -8,6 +8,8 @@ import (
 	sudokuComponents "github.com/deej-tsn/compSudoku/web/components/sudokuBoard"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	sudokuRoutes "github.com/deej-tsn/compSudoku/internal/routes"
 )
 
 func main() {
@@ -18,6 +20,8 @@ func main() {
 	e := echo.New()
 
 	//CONTROLLERS
+
+	sudokuController := sudokuRoutes.NewSudokuRoute(&grid)
 
 	// MIDDLEWARE
 
@@ -43,6 +47,9 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", sudokuComponents.Grid(grid)))
 	})
+
+	//Sudoku
+	e.POST("/sudoku", sudokuController.UpdateGrid)
 
 	e.Logger.Fatal(e.Start(":8080"))
 

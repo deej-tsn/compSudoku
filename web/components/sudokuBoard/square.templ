@@ -4,8 +4,16 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 import "fmt"
 
 templ Square(square models.Square) {
-    <div class="square">
-        {fmt.Sprintf("%d",square.Value)}
-
-    </div>
+    if square.Confirmed == true {
+        <div class="square">
+            {fmt.Sprintf("%d",square.Value)}
+        </div>
+    } else{
+        <div class={"square", templ.KV("isActive", square.Active)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{\"active\" : \"%t\", \"position\" : \"%d,%d\" }",square.Active,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML"  hx-trigger="click"> 
+            if square.Value > 0 {
+                {fmt.Sprintf("%d",square.Value)}
+            }
+        </div>
+    }
+    
 }

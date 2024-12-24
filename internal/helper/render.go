@@ -2,6 +2,7 @@ package helper
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/a-h/templ"
@@ -15,4 +16,10 @@ func Render(ctx echo.Context, status int, t templ.Component) error {
 		return ctx.String(http.StatusInternalServerError, "failed to render response template")
 	}
 	return nil
+}
+
+func CheckError(e error) {
+	if e != nil {
+		log.Panic(e)
+	}
 }
