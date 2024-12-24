@@ -15,6 +15,11 @@ type (
 	Row []*Square
 
 	Grid []Row
+
+	Game struct {
+		Grid         Grid
+		ActiveSquare Square
+	}
 )
 
 func (grid Grid) Print() {
@@ -23,22 +28,22 @@ func (grid Grid) Print() {
 	}
 }
 
-func (grid Grid) changeSquareValue(row int, column int) *Square {
-	grid[row][column].Value = 9
-	return grid[row][column]
+func (game Game) changeSquareValue(row int, column int) *Square {
+	game.Grid[row][column].Value = 9
+	return game.Grid[row][column]
 }
 
-func (grid Grid) flipSquareActiveState(row int, column int) *Square {
-	grid[row][column].Active = !grid[row][column].Active
-	return grid[row][column]
+func (game Game) flipSquareActiveState(row int, column int) *Square {
+	game.Grid[row][column].Active = !game.Grid[row][column].Active
+	return game.Grid[row][column]
 }
 
-func (grid Grid) SetSquare(row int, column int, active bool, value int) *Square {
+func (game Game) SetSquare(row int, column int, active bool, value int) *Square {
 	var squarePointer *Square
 	if active {
-		squarePointer = grid.changeSquareValue(row, column)
+		squarePointer = game.changeSquareValue(row, column)
 	} else {
-		squarePointer = grid.flipSquareActiveState(row, column)
+		squarePointer = game.flipSquareActiveState(row, column)
 	}
 	return squarePointer
 }

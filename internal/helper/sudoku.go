@@ -14,13 +14,16 @@ func ReadFileToString(filepath string) string {
 	return string(file)
 }
 
-func NewGrid(filename string) models.Grid {
+func NewGame(filename string) models.Game {
 	grid := make([]models.Row, 9)
 	rowsString := strings.Split(filename, "\n")
 	for i := 0; i < len(rowsString); i++ {
 		grid[i] = stringToRow(i, rowsString[i])
 	}
-	return grid
+	game := models.Game{
+		Grid: grid,
+	}
+	return game
 }
 
 func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *models.Square {

@@ -16,12 +16,12 @@ func main() {
 
 	pathToSudoku := "sudoku.txt"
 	pathToWeb := "./web/public"
-	grid := helper.NewGrid(helper.ReadFileToString(pathToSudoku))
+	game := helper.NewGame(helper.ReadFileToString(pathToSudoku))
 	e := echo.New()
 
 	//CONTROLLERS
 
-	sudokuController := sudokuRoutes.NewSudokuRoute(&grid)
+	sudokuController := sudokuRoutes.NewSudokuRoute(&game)
 
 	// MIDDLEWARE
 
@@ -45,7 +45,7 @@ func main() {
 
 	///HOME
 	e.GET("/", func(c echo.Context) error {
-		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", sudokuComponents.Grid(grid)))
+		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", sudokuComponents.Game(game)))
 	})
 
 	//Sudoku

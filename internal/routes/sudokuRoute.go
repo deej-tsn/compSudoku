@@ -13,12 +13,12 @@ import (
 )
 
 type SudokuRoute struct {
-	grid *models.Grid
+	game *models.Game
 }
 
-func NewSudokuRoute(grid *models.Grid) *SudokuRoute {
+func NewSudokuRoute(game *models.Game) *SudokuRoute {
 	return &SudokuRoute{
-		grid: grid,
+		game: &models.Game{},
 	}
 }
 
@@ -44,6 +44,6 @@ func (sudoku *SudokuRoute) UpdateGrid(c echo.Context) error {
 	position := stringToPosition(c.FormValue("position"))
 	active := stringToActive(c.FormValue("active"))
 	fmt.Printf("row:%d column:%d active:%t\n", position[0], position[1], active)
-	newSquare := sudoku.grid.SetSquare(position[0], position[1], active, 9)
+	newSquare := sudoku.game.SetSquare(position[0], position[1], active, 9)
 	return helper.Render(c, http.StatusAccepted, components.Square(*newSquare))
 }
