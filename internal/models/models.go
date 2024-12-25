@@ -32,10 +32,14 @@ func (grid Grid) Print() {
 	}
 }
 
-func (game Game) changeSquareValue(square *Square) {
+func (game Game) changeSquareValue(square *Square, value int) Game {
+	fmt.Println(square)
 	if !square.Confirmed {
-		square.Value = 9
+		fmt.Println("changing")
+		square.Value = value
 	}
+	fmt.Println(square)
+	return game
 
 }
 
@@ -97,17 +101,13 @@ func (game Game) activeSquareRelated(state bool) {
 }
 
 func (game Game) SetSquare(square *Square, value int) *Game {
-	fmt.Println(game.ActiveSquare)
+	fmt.Println(value)
 	if game.ActiveSquare != nil && game.ActiveSquare == square {
-		game.changeSquareValue(square)
+		game = game.changeSquareValue(square, value)
 	} else {
-		if game.ActiveSquare != nil {
-			fmt.Printf("change Active from (%d,%d) to (%d,%d)\n", game.ActiveSquare.RowIndex, game.ActiveSquare.ColumnIndex, square.RowIndex, square.ColumnIndex)
-		}
-
 		game = game.changeActiveSquare(square)
-		fmt.Println(game.ActiveSquare)
 
 	}
+	fmt.Println(game.ActiveSquare)
 	return &game
 }

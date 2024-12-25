@@ -35,6 +35,8 @@ func stringToPosition(positionString string) []int {
 
 func (sudoku *SudokuRoute) UpdateGrid(c echo.Context) error {
 	position := stringToPosition(c.FormValue("position"))
-	sudoku.game = sudoku.game.SetSquare(sudoku.game.Grid[position[0]][position[1]], 9)
+	value, err := strconv.Atoi(c.FormValue("value"))
+	helper.CheckError(err)
+	sudoku.game = sudoku.game.SetSquare(sudoku.game.Grid[position[0]][position[1]], value)
 	return helper.Render(c, http.StatusAccepted, components.Game(*sudoku.game))
 }
