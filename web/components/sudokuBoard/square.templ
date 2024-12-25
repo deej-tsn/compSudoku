@@ -4,7 +4,7 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 import "fmt"
 
 templ Square(square models.Square) {
-    <div class={"square", templ.KV("isActive", square.Active), templ.KV("isRelated", square.RelatedToActive)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{\"position\" : \"%d,%d\"}",square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
+    <div class={"square", templ.KV("isActive", square.Active), templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{\"position\" : \"%d,%d\"}",square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
         if square.Value > 0 {
             {fmt.Sprintf("%d",square.Value)}
         }

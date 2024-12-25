@@ -6,13 +6,14 @@ import (
 
 type (
 	Square struct {
-		RowIndex        int
-		ColumnIndex     int
-		Value           int
-		Confirmed       bool
-		Potential       []int
-		Active          bool
-		RelatedToActive bool
+		RowIndex          int
+		ColumnIndex       int
+		Value             int
+		Confirmed         bool
+		Potential         []int
+		Active            bool
+		RelatedToActive   bool
+		SameValueToActive bool
 	}
 
 	Row []*Square
@@ -42,12 +43,29 @@ func (game Game) changeActiveSquare(square *Square) Game {
 	if game.ActiveSquare != nil {
 		game.ActiveSquare.Active = false
 		game.activeSquareRelated(false)
+		game.activeSquareSameValue(false)
 	}
 
 	square.Active = true
 	game.ActiveSquare = square
 	game.activeSquareRelated(true)
+	game.activeSquareSameValue(true)
 	return game
+}
+func (game Game) activeSquareSameValue(state bool) {
+
+	if game.ActiveSquare.Value != 0 {
+		for i := 0; i < len(game.Grid); i++ {
+			for j := 0; j < len(game.Grid[0]); j++ {
+				if game.Grid[i][j].Value == game.ActiveSquare.Value {
+					game.Grid[i][j].SameValueToActive = state
+				}
+			}
+		}
+	}
+
+	game.ActiveSquare.SameValueToActive = false
+
 }
 
 func (game Game) activeSquareRelated(state bool) {
@@ -61,13 +79,17 @@ func (game Game) activeSquareRelated(state bool) {
 		game.Grid[i][activeSquare.ColumnIndex].RelatedToActive = state
 	}
 
-	if game.ActiveSquare.Value != 0 {
-		for i := 0; i < len(game.Grid); i++ {
-			for j := 0; j < len(game.Grid[0]); j++ {
-				if game.Grid[i][j].Value == activeSquare.Value {
-					game.Grid[i][j].RelatedToActive = state
-				}
-			}
+	// Square
+
+	minRowIndex := 3 * (activeSquare.RowIndex / 3)
+	maxRowIndex := 3*(activeSquare.RowIndex/3) + 2
+
+	minColumnIndex := 3 * (activeSquare.ColumnIndex / 3)
+	maxColumnIndex := 3*(activeSquare.ColumnIndex/3) + 2
+
+	for rowIndex := minRowIndex; rowIndex <= maxRowIndex; rowIndex++ {
+		for columnIndex := minColumnIndex; columnIndex <= maxColumnIndex; columnIndex++ {
+			game.Grid[rowIndex][columnIndex].RelatedToActive = state
 		}
 	}
 
@@ -80,7 +102,7 @@ func (game Game) SetSquare(square *Square, value int) *Game {
 		game.changeSquareValue(square)
 	} else {
 		if game.ActiveSquare != nil {
-			fmt.Printf("change Active from (%d,%d) to (%d,%d)", game.ActiveSquare.RowIndex, game.ActiveSquare.ColumnIndex, square.RowIndex, square.ColumnIndex)
+			fmt.Printf("change Active from (%d,%d) to (%d,%d)\n", game.ActiveSquare.RowIndex, game.ActiveSquare.ColumnIndex, square.RowIndex, square.ColumnIndex)
 		}
 
 		game = game.changeActiveSquare(square)

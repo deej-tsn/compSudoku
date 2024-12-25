@@ -2,6 +2,7 @@
     --squareSize : 2.5rem;
     --select : #BBDEFB;
     --related : #E2EBF3;
+    --sameValue : #C3D7EA;
 }
 
 hr {
@@ -62,6 +63,7 @@ hr {
     margin: 0;
     padding: 0;
     cursor: pointer;
+    font-size: calc(0.8*var(--squareSize));
     transition: background-color 0.1s ease-in-out;
 
 
@@ -76,6 +78,10 @@ hr {
 }
 .isRelated{
     background-color: var(--related);
+}
+
+.isSameValue{
+    background-color: var(--sameValue);
 }
 
 /* Medium Screen */
