@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +17,7 @@ type SudokuRoute struct {
 
 func NewSudokuRoute(game *models.Game) *SudokuRoute {
 	return &SudokuRoute{
-		game: &models.Game{},
+		game: game,
 	}
 }
 
@@ -34,16 +33,8 @@ func stringToPosition(positionString string) []int {
 	return position
 }
 
-func stringToActive(activeString string) bool {
-	active, err := strconv.ParseBool(activeString)
-	helper.CheckError(err)
-	return active
-}
-
 func (sudoku *SudokuRoute) UpdateGrid(c echo.Context) error {
 	position := stringToPosition(c.FormValue("position"))
-	active := stringToActive(c.FormValue("active"))
-	fmt.Printf("row:%d column:%d active:%t\n", position[0], position[1], active)
-	newSquare := sudoku.game.SetSquare(position[0], position[1], active, 9)
-	return helper.Render(c, http.StatusAccepted, components.Square(*newSquare))
+	sudoku.game = sudoku.game.SetSquare(sudoku.game.Grid[position[0]][position[1]], 9)
+	return helper.Render(c, http.StatusAccepted, components.Game(*sudoku.game))
 }

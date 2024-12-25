@@ -1,5 +1,7 @@
 :root{
     --squareSize : 2.5rem;
+    --select : #BBDEFB;
+    --related : #E2EBF3;
 }
 
 hr {
@@ -66,13 +68,15 @@ hr {
 }
 
 .square:hover{
-    background-color: rgb(202, 194, 194);
+    background-color: var(--select);
 }
 
 .isActive{
-    background-color: rgb(127, 255, 212);
+    background-color: var(--select);
 }
-
+.isRelated{
+    background-color: var(--related);
+}
 
 /* Medium Screen */
 @media (min-width: 768px) {

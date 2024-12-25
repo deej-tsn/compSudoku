@@ -28,24 +28,26 @@ func NewGame(filename string) models.Game {
 
 func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *models.Square {
 	square := models.Square{
-		RowIndex:    rowIndex,
-		ColumnIndex: columnIndex,
-		Value:       valueOfString,
-		Confirmed:   true,
-		Potential:   []int{},
-		Active:      false,
+		RowIndex:        rowIndex,
+		ColumnIndex:     columnIndex,
+		Value:           valueOfString,
+		Confirmed:       true,
+		Potential:       []int{},
+		Active:          false,
+		RelatedToActive: false,
 	}
 	return &square
 }
 
 func createUnknownSquare(rowIndex int, columnIndex int) *models.Square {
 	square := models.Square{
-		RowIndex:    rowIndex,
-		ColumnIndex: columnIndex,
-		Value:       0,
-		Confirmed:   false,
-		Potential:   []int{},
-		Active:      false,
+		RowIndex:        rowIndex,
+		ColumnIndex:     columnIndex,
+		Value:           0,
+		Confirmed:       false,
+		Potential:       []int{},
+		Active:          false,
+		RelatedToActive: false,
 	}
 	return &square
 }
