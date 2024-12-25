@@ -4,9 +4,26 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 import "fmt"
 
 templ Square(square models.Square) {
-    <div class={"square", templ.KV("isActive", square.Active), templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{\"position\" : \"%d,%d\"}",square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
-        if square.Value > 0 {
-            {fmt.Sprintf("%d",square.Value)}
-        }
-    </div>
+    if square.Active {
+        <script type="text/javascript">
+            activeSquare = document.getElementById("activeSquare")
+            activeSquare.addEventListener("keydown", (event) => {
+                console.log(event);
+            });
+
+        </script>
+        <div id="activeSquare" class="square isActive" tabindex="-1" hx-post="/sudoku" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}",square.Value,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
+            if square.Value > 0 {
+                {fmt.Sprintf("%d",square.Value)}
+            }
+        </div>
+    }else{
+        <div class={"square", templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{\"position\" : \"%d,%d\"}",square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
+            if square.Value > 0 {
+                {fmt.Sprintf("%d",square.Value)}
+            }
+        </div>
+
+    }
+
 }
