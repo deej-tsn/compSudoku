@@ -2,6 +2,10 @@ package models
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/deej-tsn/compSudoku/internal/helper"
 )
 
 type (
@@ -12,6 +16,7 @@ type (
 		Confirmed         bool
 		Potential         []int
 		Active            bool
+		Valid             bool
 		RelatedToActive   bool
 		SameValueToActive bool
 	}
@@ -32,13 +37,10 @@ func (grid Grid) Print() {
 	}
 }
 
-func (game Game) changeSquareValue(square *Square, value int) Game {
-	fmt.Println(square)
-	if !square.Confirmed {
-		fmt.Println("changing")
-		square.Value = value
+func (game Game) changeSquareValue(value int) Game {
+	if !game.ActiveSquare.Confirmed {
+		game.ActiveSquare.Value = value
 	}
-	fmt.Println(square)
 	return game
 
 }
@@ -56,6 +58,7 @@ func (game Game) changeActiveSquare(square *Square) Game {
 	game.activeSquareSameValue(true)
 	return game
 }
+
 func (game Game) activeSquareSameValue(state bool) {
 
 	if game.ActiveSquare.Value != 0 {
@@ -103,11 +106,72 @@ func (game Game) activeSquareRelated(state bool) {
 func (game Game) SetSquare(square *Square, value int) *Game {
 	fmt.Println(value)
 	if game.ActiveSquare != nil && game.ActiveSquare == square {
-		game = game.changeSquareValue(square, value)
+		game = game.changeSquareValue(value)
 	} else {
 		game = game.changeActiveSquare(square)
 
 	}
 	fmt.Println(game.ActiveSquare)
 	return &game
+}
+
+func NewGame(filename string) Game {
+	grid := make([]Row, 9)
+	rowsString := strings.Split(filename, "\n")
+	for i := 0; i < len(rowsString); i++ {
+		grid[i] = stringToRow(i, rowsString[i])
+	}
+	game := Game{
+		Grid: grid,
+	}
+	return game
+}
+
+func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *Square {
+	square := Square{
+		RowIndex:          rowIndex,
+		ColumnIndex:       columnIndex,
+		Value:             valueOfString,
+		Confirmed:         true,
+		Potential:         []int{},
+		Active:            false,
+		Valid:             true,
+		RelatedToActive:   false,
+		SameValueToActive: false,
+	}
+	return &square
+}
+
+func createUnknownSquare(rowIndex int, columnIndex int) *Square {
+	square := Square{
+		RowIndex:          rowIndex,
+		ColumnIndex:       columnIndex,
+		Value:             0,
+		Confirmed:         false,
+		Potential:         []int{},
+		Active:            false,
+		Valid:             true,
+		RelatedToActive:   false,
+		SameValueToActive: false,
+	}
+	return &square
+}
+
+func stringToRow(rowIndex int, rowString string) Row {
+	row := make([]*Square, 9)
+	removeSpaces := strings.ReplaceAll(rowString, " ", "")
+	elements := strings.Split(removeSpaces, ",")
+	for i := 0; i < len(elements); i++ {
+		var number *Square
+
+		if elements[i] != "_" {
+			conver, err := strconv.Atoi(elements[i])
+			helper.CheckError(err)
+			number = createGivenSquare(rowIndex, i, conver)
+		} else {
+			number = createUnknownSquare(rowIndex, i)
+		}
+		row[i] = number
+	}
+	return row
 }
