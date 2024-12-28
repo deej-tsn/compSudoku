@@ -1,13 +1,20 @@
 @import url("../css/sudoku.css");
 @import url("../css/chat.css");
+@import url("../css//settings.css");
 
-
+:root {
+    --primary : #003135;
+    --secondary: #6aa5af;
+    --tritary : #024950;
+}
 
 
 body {
-    background-color: #003135;
+    background-color: var(--primary);
     width: 100vw;
     height: 100vh;
+    padding: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,8 +22,10 @@ body {
 }
 
 #content {
-    background-color: #024950;
-    border-radius: 25px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: var(--secondary);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,12 +34,23 @@ body {
     padding: 2rem;
 }
 
+#sideContent{
+    width: 100%;
+    height:calc(9*var(--squareSize)); 
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* Medium Screen */
 @media (min-width: 768px) {
     #content{
 
         flex-direction: row;
+    }
+
+    #sideContent{
+        width: 20rem;
     }
 
 

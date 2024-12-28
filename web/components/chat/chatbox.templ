@@ -5,12 +5,7 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 templ Chatbox(chatLog models.ChatLog) {
     <div id="chatbox">
 
-        <ul id="chatList">
-            for _, message := range chatLog{
-                @Message(*message)
-            }
-
-        </ul>
+        @Chatlist(chatLog.Messages)
         
         @SendMessage()
     </div>

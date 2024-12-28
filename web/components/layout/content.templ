@@ -4,12 +4,17 @@ import (
     "github.com/deej-tsn/compSudoku/internal/models"
     chatComponents "github.com/deej-tsn/compSudoku/web/components/chat"
     sudokuComponents "github.com/deej-tsn/compSudoku/web/components/sudokuBoard"
+    settingComponents "github.com/deej-tsn/compSudoku/web/components/settings"
 ) 
 
 
 templ Content(game *models.Game, chat *models.ChatLog) {
     <div id="content">
         @sudokuComponents.Game(*game)
-        @chatComponents.Chatbox(*chat)
+        <div id="sideContent">
+            @chatComponents.Chatbox(*chat)
+            @settingComponents.Setting()
+        </div>
+        
     </div>
 }

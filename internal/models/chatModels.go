@@ -12,7 +12,9 @@ type (
 		Author string
 	}
 
-	ChatLog []*Message
+	ChatLog struct {
+		Messages []*Message
+	}
 )
 
 func newMessage(s string) *Message {
@@ -26,10 +28,12 @@ func newMessage(s string) *Message {
 func NewChatLog(filePath string) *ChatLog {
 	file := helper.ReadFileToString(filePath)
 	fileLines := strings.Split(file, ";")
-	chatLog := []*Message{}
+	messages := []*Message{}
+	chatLog := ChatLog{}
 	for i := 0; i < len(fileLines); i++ {
 		message := newMessage(fileLines[i])
-		chatLog = append(chatLog, message)
+		messages = append(messages, message)
 	}
-	return (*ChatLog)(&chatLog)
+	chatLog.Messages = messages
+	return &chatLog
 }

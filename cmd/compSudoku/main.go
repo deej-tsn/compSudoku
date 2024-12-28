@@ -55,7 +55,8 @@ func main() {
 	e.POST("/sudoku", sudokuController.UpdateGrid)
 
 	// CHATS
-	e.GET("/chats", chatController.GetMessages)
+	e.GET("/chats", chatController.InitWs)
+	e.POST("/messages", chatController.PostMessage)
 
 	e.Logger.Fatal(e.Start(":8080"))
 

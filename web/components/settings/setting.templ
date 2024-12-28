@@ -1,0 +1,13 @@
+package components
+
+import "github.com/deej-tsn/compSudoku/web/components/chat"
+
+templ Setting() {
+    <div id="setting">
+        @newGame()
+        @newGame()
+        @newGame()
+        @components.LoadChats()
+
+    </div>
+}

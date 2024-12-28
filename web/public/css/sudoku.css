@@ -1,8 +1,8 @@
 :root{
     --squareSize : 2.5rem;
-    --select : #BBDEFB;
-    --related : #E2EBF3;
-    --sameValue : #C3D7EA;
+    --select : #537fa3;
+    --related : #668199;
+    --sameValue : #4b6c8a;
     --dropShadow : drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 
 }
@@ -18,7 +18,7 @@ hr {
 
 .bold {
     height: 2px;
-    background-color: black;
+    background-color: white;
     z-index: 10;
 }
 
@@ -27,6 +27,8 @@ hr {
     display: flex;
     flex-direction: column;
     filter: var(--dropShadow);
+    margin-bottom: 2rem;
+    
 }
 
 
@@ -48,7 +50,7 @@ hr {
 
     .bold {
         width: 2px;
-        background-color: black;
+        background-color: white;
     }
 }
 
@@ -57,7 +59,7 @@ hr {
 .square{
     width: var(--squareSize);
     height: var(--squareSize);
-    background-color:#0FA4AF;
+    background-color:var(--tritary);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,6 +68,7 @@ hr {
     cursor: pointer;
     font-size: calc(0.8*var(--squareSize));
     transition: background-color 0.1s ease-in-out;
+    color: white;
 
 
 }
@@ -89,6 +92,12 @@ hr {
 @media (min-width: 768px) {
     :root{
         --squareSize : 3rem
+        
+    }
+
+    #grid {
+        margin-right: 2rem;
+        margin-bottom: 0;
     }
     
 
