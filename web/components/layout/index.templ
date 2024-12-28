@@ -1,9 +1,10 @@
 package components
 
-import "github.com/deej-tsn/compSudoku/web/components/chat"
+
+import "github.com/deej-tsn/compSudoku/internal/models"
 
 
-templ Index(Title string, content templ.Component) {
+templ Index(Title string, game *models.Game, chat *models.ChatLog) {
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -21,8 +22,7 @@ templ Index(Title string, content templ.Component) {
 
     </head>
     <body>
-        @content
-        @components.LoadChats()
+        @Content(game, chat)
 
     </body>
     <script type="text/javascript">

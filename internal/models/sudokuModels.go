@@ -115,7 +115,7 @@ func (game Game) SetSquare(square *Square, value int) *Game {
 	return &game
 }
 
-func NewGame(filename string) Game {
+func NewGame(filename string) *Game {
 	grid := make([]Row, 9)
 	rowsString := strings.Split(filename, "\n")
 	for i := 0; i < len(rowsString); i++ {
@@ -124,7 +124,7 @@ func NewGame(filename string) Game {
 	game := Game{
 		Grid: grid,
 	}
-	return game
+	return &game
 }
 
 func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *Square {

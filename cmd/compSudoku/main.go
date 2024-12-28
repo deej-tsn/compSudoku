@@ -6,7 +6,6 @@ import (
 	"github.com/deej-tsn/compSudoku/internal/helper"
 	"github.com/deej-tsn/compSudoku/internal/models"
 	layoutComponents "github.com/deej-tsn/compSudoku/web/components/layout"
-	sudokuComponents "github.com/deej-tsn/compSudoku/web/components/sudokuBoard"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -24,7 +23,7 @@ func main() {
 
 	//CONTROLLERS
 
-	sudokuController := sudokuRoutes.NewSudokuRoute(&game)
+	sudokuController := sudokuRoutes.NewSudokuRoute(game)
 	chatController := sudokuRoutes.NewChatHander(*chatLog)
 
 	// MIDDLEWARE
@@ -49,7 +48,7 @@ func main() {
 
 	///HOME
 	e.GET("/", func(c echo.Context) error {
-		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", sudokuComponents.Game(game)))
+		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", game, chatLog))
 	})
 
 	//Sudoku

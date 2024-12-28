@@ -1,10 +1,44 @@
 @import url("../css/sudoku.css");
+@import url("../css/chat.css");
+
+
 
 
 body {
+    background-color: #003135;
     width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+#content {
+    background-color: #024950;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    filter: var(--dropShadow);
+    padding: 2rem;
+}
+
+
+/* Medium Screen */
+@media (min-width: 768px) {
+    #content{
+
+        flex-direction: row;
+    }
+
+
+}
+/* Large Screen */
+@media (min-width: 1025px) {
+    #content {
+        width: fit-content;
+        height: fit-content;
+    }
 }

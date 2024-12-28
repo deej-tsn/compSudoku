@@ -3,10 +3,15 @@ package components
 import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Chatbox(chatLog models.ChatLog) {
-    <ul id="chatbox">
-        for _, message := range chatLog{
-            @Message(*message)
-        }
+    <div id="chatbox">
 
-    </ul>
+        <ul id="chatList">
+            for _, message := range chatLog{
+                @Message(*message)
+            }
+
+        </ul>
+        
+        @SendMessage()
+    </div>
 }
