@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/deej-tsn/compSudoku/internal/helper"
+	"github.com/deej-tsn/compSudoku/internal/models"
 	layoutComponents "github.com/deej-tsn/compSudoku/web/components/layout"
 	sudokuComponents "github.com/deej-tsn/compSudoku/web/components/sudokuBoard"
 	"github.com/labstack/echo/v4"
@@ -15,13 +16,16 @@ import (
 func main() {
 
 	pathToSudoku := "sudoku.txt"
+	pathToChat := "data/chat.txt"
 	pathToWeb := "./web/public"
-	game := helper.NewGame(helper.ReadFileToString(pathToSudoku))
+	game := models.NewGame(helper.ReadFileToString(pathToSudoku))
+	chatLog := models.NewChatLog(pathToChat)
 	e := echo.New()
 
 	//CONTROLLERS
 
 	sudokuController := sudokuRoutes.NewSudokuRoute(&game)
+	chatController := sudokuRoutes.NewChatHander(*chatLog)
 
 	// MIDDLEWARE
 
@@ -50,6 +54,9 @@ func main() {
 
 	//Sudoku
 	e.POST("/sudoku", sudokuController.UpdateGrid)
+
+	// CHATS
+	e.GET("/chats", chatController.GetMessages)
 
 	e.Logger.Fatal(e.Start(":8080"))
 

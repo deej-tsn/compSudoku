@@ -8,23 +8,28 @@ import (
 
 type (
 	Message struct {
-		text   string
-		author string
+		Text   string
+		Author string
 	}
 
-	ChatLog []Message
+	ChatLog []*Message
 )
 
-func newMessage(s string) {
-
+func newMessage(s string) *Message {
+	message := Message{
+		Text:   s,
+		Author: "dempsey",
+	}
+	return &message
 }
 
-func newChatLog(filePath string) *ChatLog {
+func NewChatLog(filePath string) *ChatLog {
 	file := helper.ReadFileToString(filePath)
 	fileLines := strings.Split(file, ";")
-	chatLog := []Message{}
+	chatLog := []*Message{}
 	for i := 0; i < len(fileLines); i++ {
 		message := newMessage(fileLines[i])
-		chatLog = append(chatLog, fileLines)
+		chatLog = append(chatLog, message)
 	}
+	return (*ChatLog)(&chatLog)
 }

@@ -1,5 +1,7 @@
 package components
 
+import "github.com/deej-tsn/compSudoku/web/components/chat"
+
 
 templ Index(Title string, content templ.Component) {
     <!DOCTYPE html>
@@ -20,6 +22,7 @@ templ Index(Title string, content templ.Component) {
     </head>
     <body>
         @content
+        @components.LoadChats()
 
     </body>
     <script type="text/javascript">
