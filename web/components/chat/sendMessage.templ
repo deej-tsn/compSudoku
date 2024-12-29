@@ -1,8 +1,8 @@
 package components
 
 templ SendMessage() {
-    <form id="sendMessage" hx-post="/messages" hx-trigger="submit" hx-target="#chatList" hx-swap="outerHTML scroll:bottom">
-        <input id="messageContent" name="message" type="text" placeholder="send message" />
+    <form id="sendMessage" hx-trigger="submit" ws-send>
+        <input id="messageContent" name="message" type="text" placeholder="send message"/>
         <button type="submit" id="messageButton"> > </button>
     </form>
 }

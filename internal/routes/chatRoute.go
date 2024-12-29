@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -37,7 +39,7 @@ var (
 	}
 )
 
-func UserConnected(currentConn WebSocketConnection, connections []*WebSocketConnection, msg string) {
+func UserConnected(currentConn WebSocketConnection, connections []*WebSocketConnection, msg string) error {
 	connectedBypeResp, _ := json.Marshal(SocketResponse{
 		From:    "",
 		Message: msg,
@@ -45,44 +47,64 @@ func UserConnected(currentConn WebSocketConnection, connections []*WebSocketConn
 
 	for _, v := range connections {
 		if currentConn.Conn != v.Conn {
+			fmt.Println("sending")
 			if err := v.Conn.WriteMessage(1, connectedBypeResp); err != nil {
-				return
+				return err
 			}
 		}
 	}
 
 	fmt.Println(msg)
 	fmt.Println("Current Connection: ", len(connections))
+	return nil
 }
 
 func (chatH ChatHandler) InitWs(c echo.Context) error {
-	username := c.FormValue("message")
+	//username := c.FormValue("message")
+	username := "dempsey"
 	conn, _ := upgrader.Upgrade(c.Response(), c.Request(), nil)
+
 	currentConn := WebSocketConnection{Conn: conn, Username: username}
 	connections = append(connections, &currentConn)
 
 	connected := username + " connected....."
-	UserConnected(currentConn, connections, connected)
-
+	err := UserConnected(currentConn, connections, connected)
+	if err != nil {
+		c.Logger().Error(err)
+	}
 	for {
 		// Read message from browser
 		msgType, msg, err := conn.ReadMessage()
 		if err != nil {
-			return c.String(http.StatusBadGateway, err.Error())
+			c.Logger().Error(err)
 		}
-
+		var thing models.JsonMessage
+		err = json.Unmarshal(msg, &thing)
+		if err != nil {
+			c.Logger().Error(err)
+		}
+		fmt.Println(thing)
 		// Print the message to the console
-		fmt.Printf("%s %s: %s\n", conn.RemoteAddr(), username, string(msg))
-
+		fmt.Printf("%s %s: %s:%d\n", conn.RemoteAddr(), username, string(msg), msgType)
 		resp := SocketResponse{
 			From:    currentConn.Username,
 			Message: string(msg),
 		}
-		byteResp, _ := json.Marshal(resp)
-
+		//byteResp, _ := json.Marshal(resp)
+		fmt.Println(resp)
+		message := models.Message{
+			Text:   thing.Text,
+			Author: "dempsey",
+		}
+		messageComp := new(bytes.Buffer)
+		err = components.Message(message).Render(context.Background(), messageComp)
+		if err != nil {
+			c.Logger().Error(err)
+		}
 		for _, v := range connections {
-			if err = v.Conn.WriteMessage(msgType, byteResp); err != nil {
-				return c.String(http.StatusTeapot, err.Error())
+
+			if err = v.Conn.WriteMessage(websocket.TextMessage, messageComp.Bytes()); err != nil {
+				c.Logger().Error(err)
 			}
 		}
 	}

@@ -15,10 +15,9 @@ import (
 func main() {
 
 	pathToSudoku := "sudoku.txt"
-	pathToChat := "data/chat.txt"
 	pathToWeb := "./web/public"
 	game := models.NewGame(helper.ReadFileToString(pathToSudoku))
-	chatLog := models.NewChatLog(pathToChat)
+	chatLog := models.NewChatLog()
 	e := echo.New()
 
 	//CONTROLLERS

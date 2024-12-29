@@ -22,6 +22,9 @@
     list-style-type: none;
     padding: 2px;
     margin-bottom: 1rem;
+
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 #sendMessage{

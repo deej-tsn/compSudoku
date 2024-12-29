@@ -3,8 +3,11 @@ package components
 import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Message(message models.Message) {
-    <li class="message">
-        <h5>{message.Author}</h5>
-        <p>{message.Text}</p>
-    </li>
+    <div hx-swap-oob="beforeend:#chatList " hx-swap="scroll:#chatList:bottom">
+        <li class="message">
+            <h5>{message.Author}</h5>
+            <p>{message.Text}</p>
+        </li>
+    </div>
+
 }

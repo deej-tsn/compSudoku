@@ -8,8 +8,13 @@ import (
 
 type (
 	Message struct {
-		Text   string
-		Author string
+		Text   string `json:"message"`
+		Author string `json:"username"`
+	}
+
+	JsonMessage struct {
+		Text   string                 `json:"message"`
+		Header map[string]interface{} `json:"HEADERS"`
 	}
 
 	ChatLog struct {
@@ -25,7 +30,7 @@ func newMessage(s string) *Message {
 	return &message
 }
 
-func NewChatLog(filePath string) *ChatLog {
+func NewChatLogFromFile(filePath string) *ChatLog {
 	file := helper.ReadFileToString(filePath)
 	fileLines := strings.Split(file, ";")
 	messages := []*Message{}
@@ -36,4 +41,11 @@ func NewChatLog(filePath string) *ChatLog {
 	}
 	chatLog.Messages = messages
 	return &chatLog
+}
+
+func NewChatLog() *ChatLog {
+	chatlog := ChatLog{
+		Messages: []*Message{},
+	}
+	return &chatlog
 }
