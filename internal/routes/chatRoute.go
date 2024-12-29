@@ -32,80 +32,79 @@ type (
 )
 
 var (
-	connections = make([]*WebSocketConnection, 0)
+	connections = make(map[WebSocketConnection]bool)
 	upgrader    = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
 	}
 )
 
-func UserConnected(currentConn WebSocketConnection, connections []*WebSocketConnection, msg string) error {
-	connectedBypeResp, _ := json.Marshal(SocketResponse{
-		From:    "",
-		Message: msg,
-	})
-
-	for _, v := range connections {
-		if currentConn.Conn != v.Conn {
-			fmt.Println("sending")
-			if err := v.Conn.WriteMessage(1, connectedBypeResp); err != nil {
-				return err
-			}
-		}
+func UserConnected(c echo.Context, msg string) {
+	message := models.Message{
+		Text:   msg,
+		Author: "system",
 	}
 
-	fmt.Println(msg)
-	fmt.Println("Current Connection: ", len(connections))
-	return nil
+	bytes := messageToComponentByte(c, message)
+	go broadcast(c, bytes)
 }
 
 func (chatH ChatHandler) InitWs(c echo.Context) error {
-	//username := c.FormValue("message")
 	username := "dempsey"
 	conn, _ := upgrader.Upgrade(c.Response(), c.Request(), nil)
 
 	currentConn := WebSocketConnection{Conn: conn, Username: username}
-	connections = append(connections, &currentConn)
+	connections[currentConn] = true
 
 	connected := username + " connected....."
-	err := UserConnected(currentConn, connections, connected)
-	if err != nil {
-		c.Logger().Error(err)
-	}
+
+	UserConnected(c, connected)
 	for {
 		// Read message from browser
 		msgType, msg, err := conn.ReadMessage()
-		if err != nil {
+		if err != nil || msgType == websocket.CloseGoingAway {
 			c.Logger().Error(err)
+			break
 		}
 		var thing models.JsonMessage
 		err = json.Unmarshal(msg, &thing)
 		if err != nil {
 			c.Logger().Error(err)
 		}
-		fmt.Println(thing)
-		// Print the message to the console
+
 		fmt.Printf("%s %s: %s:%d\n", conn.RemoteAddr(), username, string(msg), msgType)
-		resp := SocketResponse{
-			From:    currentConn.Username,
-			Message: string(msg),
-		}
-		//byteResp, _ := json.Marshal(resp)
-		fmt.Println(resp)
+
 		message := models.Message{
 			Text:   thing.Text,
-			Author: "dempsey",
+			Author: username,
 		}
-		messageComp := new(bytes.Buffer)
-		err = components.Message(message).Render(context.Background(), messageComp)
-		if err != nil {
-			c.Logger().Error(err)
-		}
-		for _, v := range connections {
 
-			if err = v.Conn.WriteMessage(websocket.TextMessage, messageComp.Bytes()); err != nil {
-				c.Logger().Error(err)
-			}
+		bytes := messageToComponentByte(c, message)
+
+		go broadcast(c, bytes)
+	}
+
+	delete(connections, currentConn)
+
+	return currentConn.NetConn().Close()
+}
+
+func messageToComponentByte(c echo.Context, message models.Message) []byte {
+	messageComp := new(bytes.Buffer)
+	err := components.Message(message).Render(context.Background(), messageComp)
+	if err != nil {
+		c.Logger().Error(err)
+		return []byte{}
+	}
+	return messageComp.Bytes()
+}
+
+func broadcast(c echo.Context, message []byte) {
+	for v := range connections {
+		if err := v.Conn.WriteMessage(websocket.TextMessage, message); err != nil {
+			delete(connections, v)
+			v.Close()
+			c.Logger().Error(err)
 		}
 	}
 }
