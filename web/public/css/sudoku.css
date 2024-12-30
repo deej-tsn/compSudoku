@@ -55,6 +55,12 @@ hr {
     color: white;
     font-size: calc(0.7*var(--squareSize));
     filter: var(--dropShadow);
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.number:hover {
+    background-color: var(--select);
 }
 
 

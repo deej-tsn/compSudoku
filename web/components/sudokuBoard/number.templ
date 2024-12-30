@@ -1,10 +1,11 @@
 package components
 
 import "strconv"
+import "fmt"
 
 
 templ Number(num int) {
-    <div class="number">
+    <div class="number" hx-post="/sudoku/active" hx-vals={fmt.Sprintf("{\"value\" : \"%d\"} ",num)} hx-swap="outerHTML" hx-target="#grid" hx-trigger="click">
         {strconv.Itoa(num)}
     </div>
 }

@@ -45,7 +45,7 @@ func (game Game) changeSquareValue(value int) Game {
 
 }
 
-func (game Game) changeActiveSquare(square *Square) Game {
+func (game Game) ChangeActiveSquare(square *Square) Game {
 	if game.ActiveSquare != nil {
 		game.ActiveSquare.Active = false
 		game.activeSquareRelated(false)
@@ -103,15 +103,12 @@ func (game Game) activeSquareRelated(state bool) {
 	activeSquare.RelatedToActive = false
 }
 
-func (game Game) SetSquare(square *Square, value int) *Game {
-	fmt.Println(value)
-	if game.ActiveSquare != nil && game.ActiveSquare == square {
-		game = game.changeSquareValue(value)
-	} else {
-		game = game.changeActiveSquare(square)
-
-	}
-	fmt.Println(game.ActiveSquare)
+func (game Game) SetActiveSquare(square *Square) *Game {
+	game = game.ChangeActiveSquare(square)
+	return &game
+}
+func (game Game) SetActiveSquareValue(value int) *Game {
+	game = game.changeSquareValue(value)
 	return &game
 }
 

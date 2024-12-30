@@ -4,7 +4,7 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Grid(grid models.Grid) {
 
-    <div id="grid">
+    <div id="grid" hx-get="/sudoku/board" hx-trigger="every 1s" hx-swap="outerHTML">
         <hr class="bold">
         for i, row := range grid{
             @Row(row)

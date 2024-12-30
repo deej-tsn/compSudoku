@@ -5,7 +5,7 @@ import "fmt"
 
 templ Square(square models.Square) {
     if square.Active {
-        <div id="activeSquare" class="square isActive" hx-post="/sudoku" hx-vals={fmt.Sprintf("js:{value:event.detail.lastKey , \"position\" : \"%d,%d\"}",square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click, newValue"> 
+        <div id="activeSquare" class="square isActive" hx-post="/sudoku/active" hx-vals="js:{value:event.detail.lastKey}" hx-swap="outerHTML" hx-target="#grid" hx-trigger="click, newValue"> 
             if square.Value > 0 {
                 {fmt.Sprintf("%d",square.Value)}
             }

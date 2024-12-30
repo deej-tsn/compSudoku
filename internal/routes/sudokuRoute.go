@@ -33,10 +33,19 @@ func stringToPosition(positionString string) []int {
 	return position
 }
 
-func (sudoku *SudokuRoute) UpdateGrid(c echo.Context) error {
+func (sudoku *SudokuRoute) SetActiveSquare(c echo.Context) error {
 	position := stringToPosition(c.FormValue("position"))
+	sudoku.game = sudoku.game.SetActiveSquare(sudoku.game.Grid[position[0]][position[1]])
+	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game.Grid))
+}
+
+func (sudoku *SudokuRoute) SetActiveSquareValue(c echo.Context) error {
 	value, err := strconv.Atoi(c.FormValue("value"))
 	helper.CheckError(err)
-	sudoku.game = sudoku.game.SetSquare(sudoku.game.Grid[position[0]][position[1]], value)
-	return helper.Render(c, http.StatusAccepted, components.Game(*sudoku.game))
+	sudoku.game = sudoku.game.SetActiveSquareValue(value)
+	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game.Grid))
+}
+
+func (sudoku *SudokuRoute) GetBoard(c echo.Context) error {
+	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game.Grid))
 }

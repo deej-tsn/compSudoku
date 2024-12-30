@@ -51,7 +51,9 @@ func main() {
 	})
 
 	//Sudoku
-	e.POST("/sudoku", sudokuController.UpdateGrid)
+	e.POST("/sudoku", sudokuController.SetActiveSquare)
+	e.POST("/sudoku/active", sudokuController.SetActiveSquareValue)
+	e.GET("/sudoku/board", sudokuController.GetBoard)
 
 	// CHATS
 	e.GET("/chats", chatController.InitWs)
