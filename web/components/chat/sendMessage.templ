@@ -1,7 +1,7 @@
 package components
 
 templ SendMessage() {
-    <form id="sendMessage" hx-trigger="submit" ws-send hx-on::submit="this.reset()">
+    <form id="sendMessage" hx-trigger="submit" ws-send hx-on:submit="this.reset()">
         <input id="messageContent" name="message" type="text" placeholder="send message"/>
         <button type="submit" id="messageButton"> > </button>
     </form>

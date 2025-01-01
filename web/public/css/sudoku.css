@@ -51,7 +51,9 @@ hr {
     height: 2.5rem;
     border-radius: 100px;
     background-color: var(--tritary);
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
     font-size: calc(0.7*var(--squareSize));
     filter: var(--dropShadow);
@@ -105,9 +107,7 @@ hr {
 
 }
 
-.square:hover{
-    background-color: var(--select);
-}
+
 
 .isActive{
     background-color: var(--select);
@@ -125,6 +125,10 @@ hr {
     :root{
         --squareSize : 3rem
         
+    }
+
+    .square:hover{
+        background-color: var(--select);
     }
 
     #grid {
