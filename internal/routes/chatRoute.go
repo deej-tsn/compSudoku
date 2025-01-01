@@ -74,13 +74,16 @@ func (chatH ChatHandler) InitWs(c echo.Context) error {
 
 		fmt.Printf("%s %s: %s:%d\n", conn.RemoteAddr(), username, string(msg), msgType)
 
+		if thing.Text == "" {
+			continue
+		}
+
 		message := models.Message{
 			Text:   thing.Text,
 			Author: username,
 		}
 
 		bytes := messageToComponentByte(c, message)
-
 		go broadcast(c, bytes)
 	}
 

@@ -65,12 +65,12 @@
 }
 
 #messageButton {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 25px;
-    background-color: var(--tritary);
+    width:2rem;
+    aspect-ratio: 1 1;
+    background-color: #964734;
     color: white;
     border: 0;
+    cursor: pointer;
 }
 
 /* Medium Screen */
