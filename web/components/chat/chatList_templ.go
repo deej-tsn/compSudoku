@@ -36,7 +36,7 @@ func Chatlist(messages []*models.Message) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, message := range messages {
-			templ_7745c5c3_Err = Message(*message).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Message(*message, false).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -3,8 +3,8 @@ package components
 import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Chatbox(chatLog models.ChatLog) {
-    <div id="chatbox" hx-ext="ws, json-enc" ws-connect="/chats" hx-trigger="load">
-
+    <div id="chatbox" hx-ext="ws, json-enc" ws-connect="/chats" >
+        @UsernameForm()
         @Chatlist(chatLog.Messages)
         
         @SendMessage()

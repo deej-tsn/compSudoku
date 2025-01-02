@@ -21,7 +21,9 @@ type (
 
 	WebSocketConnection struct {
 		*websocket.Conn
+		SignedIn bool
 		Username string
+		Color    string
 	}
 
 	SocketResponse struct {
@@ -39,26 +41,24 @@ var (
 	}
 )
 
-func UserConnected(c echo.Context, msg string) {
+func UserConnected(c echo.Context, user WebSocketConnection) {
+	systemMessage := fmt.Sprintf("%s has connected", user.Username)
 	message := models.Message{
-		Text:   msg,
+		Text:   systemMessage,
 		Author: "system",
+		Color:  "purple",
 	}
 
-	bytes := messageToComponentByte(c, message)
-	go broadcast(c, bytes)
+	bytes := messageToComponentByte(c, message, false)
+	go broadcast(c, user, bytes)
 }
 
 func (chatH ChatHandler) InitWs(c echo.Context) error {
-	username := "dempsey"
 	conn, _ := upgrader.Upgrade(c.Response(), c.Request(), nil)
 
-	currentConn := WebSocketConnection{Conn: conn, Username: username}
+	currentConn := WebSocketConnection{Conn: conn, SignedIn: false}
 	connections[currentConn] = true
 
-	connected := username + " connected....."
-
-	UserConnected(c, connected)
 	for {
 		// Read message from browser
 		msgType, msg, err := conn.ReadMessage()
@@ -66,25 +66,49 @@ func (chatH ChatHandler) InitWs(c echo.Context) error {
 			c.Logger().Error(err)
 			break
 		}
-		var thing models.JsonMessage
-		err = json.Unmarshal(msg, &thing)
-		if err != nil {
-			c.Logger().Error(err)
+		if currentConn.SignedIn {
+			var messageReq models.JSONMessage
+			err = json.Unmarshal(msg, &messageReq)
+			if err != nil {
+				c.Logger().Error(err)
+			}
+
+			fmt.Printf("%s %s: %s:%d\n", conn.RemoteAddr(), currentConn.Username, string(msg), msgType)
+
+			if messageReq.Text == "" {
+				continue
+			}
+
+			message := models.Message{
+				Text:   messageReq.Text,
+				Author: currentConn.Username,
+				Color:  currentConn.Color,
+			}
+
+			bytes := messageToComponentByte(c, message, false)
+			go broadcast(c, currentConn, bytes)
+
+			bytes = messageToComponentByte(c, message, true)
+
+			if err := currentConn.Conn.WriteMessage(websocket.TextMessage, bytes); err != nil {
+				c.Logger().Error(err)
+				break
+			}
+
+		} else {
+			var SignedInReq models.JSONSignIn
+			err = json.Unmarshal(msg, &SignedInReq)
+			if err != nil {
+				c.Logger().Error(err)
+			}
+			delete(connections, currentConn)
+
+			currentConn = WebSocketConnection{Conn: conn, Username: SignedInReq.Username, Color: SignedInReq.Color, SignedIn: true}
+			connections[currentConn] = true
+
+			UserConnected(c, currentConn)
 		}
 
-		fmt.Printf("%s %s: %s:%d\n", conn.RemoteAddr(), username, string(msg), msgType)
-
-		if thing.Text == "" {
-			continue
-		}
-
-		message := models.Message{
-			Text:   thing.Text,
-			Author: username,
-		}
-
-		bytes := messageToComponentByte(c, message)
-		go broadcast(c, bytes)
 	}
 
 	delete(connections, currentConn)
@@ -92,9 +116,9 @@ func (chatH ChatHandler) InitWs(c echo.Context) error {
 	return currentConn.NetConn().Close()
 }
 
-func messageToComponentByte(c echo.Context, message models.Message) []byte {
+func messageToComponentByte(c echo.Context, message models.Message, selfSent bool) []byte {
 	messageComp := new(bytes.Buffer)
-	err := components.Message(message).Render(context.Background(), messageComp)
+	err := components.Message(message, selfSent).Render(context.Background(), messageComp)
 	if err != nil {
 		c.Logger().Error(err)
 		return []byte{}
@@ -102,13 +126,16 @@ func messageToComponentByte(c echo.Context, message models.Message) []byte {
 	return messageComp.Bytes()
 }
 
-func broadcast(c echo.Context, message []byte) {
+func broadcast(c echo.Context, sentFrom WebSocketConnection, message []byte) {
 	for v := range connections {
-		if err := v.Conn.WriteMessage(websocket.TextMessage, message); err != nil {
-			delete(connections, v)
-			v.Close()
-			c.Logger().Error(err)
+		if v != sentFrom {
+			if err := v.Conn.WriteMessage(websocket.TextMessage, message); err != nil {
+				delete(connections, v)
+				v.Close()
+				c.Logger().Error(err)
+			}
 		}
+
 	}
 }
 

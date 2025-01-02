@@ -6,3 +6,81 @@
 
     background-color:var(--tritary);
 }
+
+#blurScreen{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+}
+
+
+
+#sendUser{
+    width: 20rem;
+    height: fit-content;
+    padding: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50%  -50%;
+    background-color: var(--tritary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    color: white;
+    border: 2px white;
+
+    label{
+        font-weight: 600;
+        font-size: larger;
+    }
+
+    #colorRadioHolder{
+        margin-top: 0.5rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+
+        #redRadio{
+            accent-color:#964734
+        }
+    }
+
+    .colorRadio{
+        width: 1.5rem;
+        aspect-ratio: 1;
+    }
+
+    #usernameInput{
+        width: 80%;
+        margin: 1rem;
+        border: 0;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        padding-left: 1rem;
+        border-radius: 10px;
+        filter: var(--dropShadow);
+    }
+
+    #userColorHolder{
+        width: 80%;
+        margin: 1rem;
+    }
+
+    button{
+        width: 80%;
+        background-color: #964734;
+        color: white;
+        cursor: pointer;
+        border: 0;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border-radius: 10px;
+        filter: var(--dropShadow);
+    }
+}

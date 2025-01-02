@@ -5,7 +5,7 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 templ Chatlist(messages []*models.Message) {
         <ul id="chatList" >
             for _, message := range messages{
-                @Message(*message)
+                @Message(*message, false)
             }
 
         </ul>

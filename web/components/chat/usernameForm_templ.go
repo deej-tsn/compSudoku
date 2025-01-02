@@ -8,9 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/deej-tsn/compSudoku/internal/models"
-
-func Grid(grid models.Grid) templ.Component {
+func UsernameForm() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,32 +29,7 @@ func Grid(grid models.Grid) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"grid\"><hr class=\"bold\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		for i, row := range grid {
-			templ_7745c5c3_Err = Row(row).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if i%3 == 2 {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<hr class=\"bold\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<hr>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><div id=\"blurScreen\"></div><form id=\"sendUser\" hx-trigger=\"submit\" ws-send hx-on:submit=\"this.parentElement.remove()\"><input id=\"usernameInput\" name=\"username\" type=\"text\" placeholder=\"Username\"><div id=\"userColorHolder\"><label>User Color:</label><div id=\"colorRadioHolder\"><input type=\"radio\" id=\"redRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"red\"> <input type=\"radio\" id=\"blueRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"blue\"> <input type=\"radio\" id=\"yellowRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"yellow\"> <input type=\"radio\" id=\"greenRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"green\"> <input type=\"radio\" id=\"pinkRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"pink\"> <input type=\"radio\" id=\"salmonRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"salmon\"> <input type=\"radio\" id=\"redrRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"red\"> <input type=\"radio\" id=\"redrRadio\" class=\"colorRadio\" name=\"radioColor\" value=\"red\"></div></div><button type=\"submit\">Join Room </button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

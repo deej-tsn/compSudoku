@@ -1,11 +1,12 @@
 package components
 
 import "github.com/deej-tsn/compSudoku/internal/models"
+import "fmt"
 
-templ Message(message models.Message) {
+templ Message(message models.Message, selfMessage bool) {
     <div hx-swap-oob="beforeend:#chatList " hx-swap="scroll:#chatList:bottom">
-        <li class="message">
-            <h5>{message.Author}</h5>
+        <li class={"message", templ.KV("selfMessage", selfMessage)}>
+            <h4 class={fmt.Sprint(message.Color)} >{message.Author}</h4>
             <p>{message.Text}</p>
         </li>
     </div>
