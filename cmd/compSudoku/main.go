@@ -1,11 +1,14 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/deej-tsn/compSudoku/internal/helper"
 	"github.com/deej-tsn/compSudoku/internal/models"
+	"github.com/deej-tsn/compSudoku/internal/routes"
 	layoutComponents "github.com/deej-tsn/compSudoku/web/components/layout"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -16,7 +19,16 @@ func main() {
 
 	pathToSudoku := "sudoku.txt"
 	pathToWeb := "./web/public"
-	game := models.NewGame(helper.ReadFileToString(pathToSudoku))
+	godotenv.Load(".env")
+	grid, err := routes.GetBoardAPI()
+	var game *models.Game
+	if err != nil {
+		log.Panicln("Cannot encode response to Object")
+		game = models.NewGame(helper.ReadFileToString(pathToSudoku))
+	} else {
+		game = models.ResponseToGame(grid)
+	}
+
 	chatLog := models.NewChatLog()
 	e := echo.New()
 

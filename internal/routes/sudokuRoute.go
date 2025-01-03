@@ -1,7 +1,11 @@
 package routes
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -48,4 +52,26 @@ func (sudoku *SudokuRoute) SetActiveSquareValue(c echo.Context) error {
 
 func (sudoku *SudokuRoute) GetBoard(c echo.Context) error {
 	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game.Grid))
+}
+
+func GetBoardAPI() (*models.SudokuResponse, error) {
+	difficulty := 2
+	sudoku_key := os.Getenv("SUDOKU_API_KEY")
+
+	url := fmt.Sprintf("https://sudoku-board.p.rapidapi.com/new-board?diff=%d&stype=list&solu=true", difficulty)
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("x-rapidapi-key", sudoku_key)
+	req.Header.Add("x-rapidapi-host", "sudoku-board.p.rapidapi.com")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+	fmt.Println(string(body))
+	var response models.SudokuResponse
+	err := json.Unmarshal(body, &response)
+	return &response, err
+
 }

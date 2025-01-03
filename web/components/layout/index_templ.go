@@ -52,7 +52,7 @@ func Index(Title string, game *models.Game, chat *models.ChatLog) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</body><script type=\"text/javascript\">\n        let activeSquareEventHandler = (event) => {\n            let activeSquare = document.getElementById(\"activeSquare\")\n            if(event.which >= 48 && event.which <= 57){\n                activeSquare.innerHTML = event.key;\n                htmx.trigger(\"#activeSquare\", \"newValue\",{lastKey : event.key})\n            }\n        };\n\n        let body = document.querySelector(\"body\")\n\n        body.addEventListener(\"keydown\", activeSquareEventHandler)\n        \n\n    </script></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</body><script type=\"text/javascript\">\n        let activeSquareEventHandler = (event) => {\n            let activeSquare = document.getElementById(\"activeSquare\")\n            if(event.which >= 48 && event.which <= 57){\n                htmx.trigger(\"#activeSquare\", \"newValue\", {lastKey : event.key})\n            }\n        };\n\n        let body = document.querySelector(\"body\")\n\n        body.addEventListener(\"keydown\", activeSquareEventHandler)\n        \n\n    </script></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,0 +1,12 @@
+package components
+
+import "strconv"
+
+templ Mistakes(number int) {
+    if number > 0 {
+        <div>
+            Mistakes {strconv.Itoa(number)}/3
+        </div>  
+    }
+
+}

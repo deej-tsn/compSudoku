@@ -32,8 +32,7 @@ templ Index(Title string, game *models.Game, chat *models.ChatLog) {
         let activeSquareEventHandler = (event) => {
             let activeSquare = document.getElementById("activeSquare")
             if(event.which >= 48 && event.which <= 57){
-                activeSquare.innerHTML = event.key;
-                htmx.trigger("#activeSquare", "newValue",{lastKey : event.key})
+                htmx.trigger("#activeSquare", "newValue", {lastKey : event.key})
             }
         };
 

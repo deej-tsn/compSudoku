@@ -109,7 +109,7 @@ hr {
 
 
 
-.isActive{
+#activeSquare{
     background-color: var(--select);
 }
 .isRelated{
@@ -118,6 +118,9 @@ hr {
 
 .isSameValue{
     background-color: var(--sameValue);
+}
+.isIncorrect {
+    color: rgb(181, 5, 5);
 }
 
 /* Medium Screen */

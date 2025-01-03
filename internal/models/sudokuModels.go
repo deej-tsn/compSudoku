@@ -13,6 +13,7 @@ type (
 		RowIndex          int
 		ColumnIndex       int
 		Value             int
+		ActualValue       int
 		Confirmed         bool
 		Potential         []int
 		Active            bool
@@ -27,7 +28,17 @@ type (
 
 	Game struct {
 		Grid         Grid
+		Difficulty   string
+		Mistakes     int
 		ActiveSquare *Square
+	}
+
+	SudokuResponse struct {
+		Response struct {
+			Difficulty     string  `json:"difficulty"`
+			Solution       [][]int `json:"solution"`
+			UnsolvedSudoku [][]int `json:"unsolved-sudoku"`
+		} `json:"response"`
 	}
 )
 
@@ -108,7 +119,10 @@ func (game Game) SetActiveSquare(square *Square) *Game {
 	return &game
 }
 func (game Game) SetActiveSquareValue(value int) *Game {
+	game.activeSquareSameValue(false)
 	game = game.changeSquareValue(value)
+	game.activeSquareSameValue(true)
+
 	return &game
 }
 
@@ -122,6 +136,25 @@ func NewGame(filename string) *Game {
 		Grid: grid,
 	}
 	return &game
+}
+
+func createSquare(rowIndex int, columnIndex int, value int, actualValue int) *Square {
+	square := Square{
+		RowIndex:          rowIndex,
+		ColumnIndex:       columnIndex,
+		Value:             value,
+		ActualValue:       actualValue,
+		Confirmed:         true,
+		Potential:         []int{},
+		Active:            false,
+		Valid:             true,
+		RelatedToActive:   false,
+		SameValueToActive: false,
+	}
+	if value == 0 {
+		square.Confirmed = false
+	}
+	return &square
 }
 
 func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *Square {
@@ -169,6 +202,27 @@ func stringToRow(rowIndex int, rowString string) Row {
 			number = createUnknownSquare(rowIndex, i)
 		}
 		row[i] = number
+	}
+	return row
+}
+
+func ResponseToGame(response *SudokuResponse) *Game {
+	grid := make([]Row, 9)
+	for i := 0; i < len(response.Response.Solution); i++ {
+		grid[i] = IntegerRowToSudokuRow(response.Response.UnsolvedSudoku[i], response.Response.Solution[i], i)
+	}
+	game := Game{
+		Grid:       grid,
+		Difficulty: response.Response.Difficulty,
+		Mistakes:   0,
+	}
+	return &game
+}
+
+func IntegerRowToSudokuRow(unsolvedRow []int, solvedRow []int, rowIndex int) Row {
+	row := make([]*Square, 9)
+	for i := 0; i < 9; i++ {
+		row[i] = createSquare(rowIndex, i, unsolvedRow[i], solvedRow[i])
 	}
 	return row
 }
