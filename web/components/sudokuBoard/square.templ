@@ -6,18 +6,18 @@ import "fmt"
 templ Square(square models.Square) {
     if square.Active {
         if square.Confirmed {
-            <div id="activeSquare" class="square" hx-post="/sudoku" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}",square.Value,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
+            <div id="activeSquare" class="square" hx-post="/sudoku" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}",square.Value,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#board" hx-trigger="click"> 
                     {fmt.Sprintf("%d",square.Value)}
             </div>
         } else {
-            <div id="activeSquare" class={"square", templ.KV("isIncorrect", square.Value > 0 && square.Value != square.ActualValue)} hx-post="/sudoku/active" hx-vals="js:{value:event.detail.lastKey}" hx-swap="outerHTML" hx-target="#grid" hx-trigger="newValue"> 
+            <div id="activeSquare" class={"square", templ.KV("isIncorrect", square.Value > 0 && square.Value != square.ActualValue)} hx-post="/sudoku/active" hx-vals="js:{value:event.detail.lastKey}" hx-swap="outerHTML" hx-target="#board" hx-trigger="newValue"> 
                 if square.Value > 0 {
                     {fmt.Sprintf("%d",square.Value)}
                 }
             </div>
         } 
     } else {
-        <div class={"square", templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive), templ.KV("isIncorrect", square.Value > 0 && square.Value != square.ActualValue)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}",square.Value,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
+        <div class={"square", templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive), templ.KV("isIncorrect", square.Value > 0 && square.Value != square.ActualValue)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}",square.Value,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#board" hx-trigger="click"> 
             if square.Value > 0 {
                 {fmt.Sprintf("%d",square.Value)}
             }

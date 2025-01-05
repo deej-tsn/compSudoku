@@ -51,6 +51,11 @@ func (grid Grid) Print() {
 func (game Game) changeSquareValue(value int) Game {
 	if !game.ActiveSquare.Confirmed {
 		game.ActiveSquare.Value = value
+		fmt.Printf("value: %d, actual value : %d\n", value, game.ActiveSquare.ActualValue)
+		if value != game.ActiveSquare.ActualValue {
+			game.Mistakes += 1
+			fmt.Printf("Mistakes : %d\n", game.Mistakes)
+		}
 	}
 	return game
 
@@ -120,7 +125,9 @@ func (game Game) SetActiveSquare(square *Square) *Game {
 }
 func (game Game) SetActiveSquareValue(value int) *Game {
 	game.activeSquareSameValue(false)
+
 	game = game.changeSquareValue(value)
+
 	game.activeSquareSameValue(true)
 
 	return &game

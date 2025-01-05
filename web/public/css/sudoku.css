@@ -28,6 +28,14 @@ hr {
     margin-bottom: 2rem;
 }
 
+#mistakes {
+    margin-left: auto;
+    width: fit-content;
+    font-size: larger;
+    font-weight: 600;
+    color:var(--tritary)
+}
+
 
 #grid {
     display: flex;

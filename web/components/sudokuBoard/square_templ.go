@@ -47,7 +47,7 @@ func Square(square models.Square) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"outerHTML\" hx-target=\"#grid\" hx-trigger=\"click\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"click\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -83,7 +83,7 @@ func Square(square models.Square) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-post=\"/sudoku/active\" hx-vals=\"js:{value:event.detail.lastKey}\" hx-swap=\"outerHTML\" hx-target=\"#grid\" hx-trigger=\"newValue\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-post=\"/sudoku/active\" hx-vals=\"js:{value:event.detail.lastKey}\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"newValue\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -135,7 +135,7 @@ func Square(square models.Square) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"outerHTML\" hx-target=\"#grid\" hx-trigger=\"click\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"click\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

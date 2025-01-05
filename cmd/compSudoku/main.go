@@ -59,7 +59,7 @@ func main() {
 
 	///HOME
 	e.GET("/", func(c echo.Context) error {
-		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", game, chatLog))
+		return helper.Render(c, http.StatusOK, layoutComponents.Index("Sudoku", game, chatLog))
 	})
 
 	//Sudoku
