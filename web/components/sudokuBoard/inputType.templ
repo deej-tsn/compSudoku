@@ -1,0 +1,10 @@
+package components
+
+templ InputType(editMode bool) {
+    <div id="inputType" class={templ.KV("editMode", editMode), templ.KV("optionMode", !editMode)} hx-post="/sudoku/htmx/flipEditMode" hx-swap="outerHTML">
+        <div id="inputSlider">
+            
+        </div>
+    
+    </div>
+}

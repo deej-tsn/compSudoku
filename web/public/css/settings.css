@@ -3,12 +3,15 @@
 	font-family: "Roboto", sans-serif;
 	font-weight: 400;
 	font-style: normal;
+    --selected : #537fa3;
 }
 
 #setting {
     height: 100%;
     width: 100%;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
     background-color:var(--tritary);
 }
 
@@ -51,9 +54,7 @@
         display: flex;
         justify-content: space-evenly;
 
-        #redRadio{
-            accent-color:#964734
-        }
+
     }
 
     .colorRadio{
@@ -87,5 +88,58 @@
         padding-bottom: 1rem;
         border-radius: 10px;
         filter: var(--dropShadow);
+    }
+}
+
+.red{
+    accent-color:#964734;
+    background-color: #964734;
+
+}
+
+
+.blue{
+    accent-color:#343c96;
+    background-color: #343c96;
+}
+
+
+.yellow{
+    accent-color:#8f9634;
+    background-color: #8f9634;
+}
+
+
+.green{
+    accent-color:#399634;
+    background-color: #399634;
+}
+
+
+.pink{
+    accent-color:#96347a;
+    background-color: #96347a;
+}
+
+
+.salmon{
+    accent-color:#963450;
+    background-color: #963450;
+}
+
+#newGame{
+    width: 5rem;
+    aspect-ratio: 1;
+    border-radius: 100px;
+    background-color: var(--selected);
+    background-image: url(/assets/Plus.svg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: var(--dropShadow);
+    cursor: pointer;
+    
+    img {
+        filter: invert(1);
     }
 }

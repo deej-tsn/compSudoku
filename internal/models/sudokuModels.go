@@ -2,10 +2,6 @@ package models
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
-
-	"github.com/deej-tsn/compSudoku/internal/helper"
 )
 
 type (
@@ -15,7 +11,7 @@ type (
 		Value             int
 		ActualValue       int
 		Confirmed         bool
-		Potential         []int
+		Options           []bool
 		Active            bool
 		Valid             bool
 		RelatedToActive   bool
@@ -31,6 +27,7 @@ type (
 		Difficulty   string
 		Mistakes     int
 		ActiveSquare *Square
+		EditState    bool
 	}
 
 	SudokuResponse struct {
@@ -133,26 +130,15 @@ func (game Game) SetActiveSquareValue(value int) *Game {
 	return &game
 }
 
-func NewGame(filename string) *Game {
-	grid := make([]Row, 9)
-	rowsString := strings.Split(filename, "\n")
-	for i := 0; i < len(rowsString); i++ {
-		grid[i] = stringToRow(i, rowsString[i])
-	}
-	game := Game{
-		Grid: grid,
-	}
-	return &game
-}
-
 func createSquare(rowIndex int, columnIndex int, value int, actualValue int) *Square {
+	clearOptions := make([]bool, 9)
 	square := Square{
 		RowIndex:          rowIndex,
 		ColumnIndex:       columnIndex,
 		Value:             value,
 		ActualValue:       actualValue,
 		Confirmed:         true,
-		Potential:         []int{},
+		Options:           clearOptions,
 		Active:            false,
 		Valid:             true,
 		RelatedToActive:   false,
@@ -160,21 +146,6 @@ func createSquare(rowIndex int, columnIndex int, value int, actualValue int) *Sq
 	}
 	if value == 0 {
 		square.Confirmed = false
-	}
-	return &square
-}
-
-func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *Square {
-	square := Square{
-		RowIndex:          rowIndex,
-		ColumnIndex:       columnIndex,
-		Value:             valueOfString,
-		Confirmed:         true,
-		Potential:         []int{},
-		Active:            false,
-		Valid:             true,
-		RelatedToActive:   false,
-		SameValueToActive: false,
 	}
 	return &square
 }
@@ -194,25 +165,6 @@ func createUnknownSquare(rowIndex int, columnIndex int) *Square {
 	return &square
 }
 
-func stringToRow(rowIndex int, rowString string) Row {
-	row := make([]*Square, 9)
-	removeSpaces := strings.ReplaceAll(rowString, " ", "")
-	elements := strings.Split(removeSpaces, ",")
-	for i := 0; i < len(elements); i++ {
-		var number *Square
-
-		if elements[i] != "_" {
-			conver, err := strconv.Atoi(elements[i])
-			helper.CheckError(err)
-			number = createGivenSquare(rowIndex, i, conver)
-		} else {
-			number = createUnknownSquare(rowIndex, i)
-		}
-		row[i] = number
-	}
-	return row
-}
-
 func ResponseToGame(response *SudokuResponse) *Game {
 	grid := make([]Row, 9)
 	for i := 0; i < len(response.Response.Solution); i++ {
@@ -222,6 +174,7 @@ func ResponseToGame(response *SudokuResponse) *Game {
 		Grid:       grid,
 		Difficulty: response.Response.Difficulty,
 		Mistakes:   0,
+		EditState:  true,
 	}
 	return &game
 }

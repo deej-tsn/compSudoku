@@ -54,6 +54,11 @@ func (sudoku *SudokuRoute) GetBoard(c echo.Context) error {
 	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game))
 }
 
+func (sudoku *SudokuRoute) PostFlipEditMode(c echo.Context) error {
+	sudoku.game.EditState = !sudoku.game.EditState
+	return helper.Render(c, http.StatusAccepted, components.InputType(sudoku.game.EditState))
+}
+
 func GetBoardAPI() (*models.SudokuResponse, error) {
 	difficulty := 2
 	sudoku_key := os.Getenv("SUDOKU_API_KEY")

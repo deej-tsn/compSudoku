@@ -65,6 +65,7 @@ func main() {
 	//Sudoku
 	e.POST("/sudoku", sudokuController.SetActiveSquare)
 	e.POST("/sudoku/active", sudokuController.SetActiveSquareValue)
+	e.POST("/sudoku/htmx/flipEditMode", sudokuController.PostFlipEditMode)
 	e.GET("/sudoku/board", sudokuController.GetBoard)
 
 	// CHATS

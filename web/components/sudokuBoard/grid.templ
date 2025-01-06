@@ -4,7 +4,10 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Grid(game *models.Game) {
     <div id="board">
-        @Mistakes(game.Mistakes)
+        <div id="extras">
+            @InputType(game.EditState)
+            @Mistakes(game.Mistakes)
+        </div>
         <div id="grid">
             <hr class="bold">
             for i, row := range game.Grid{

@@ -36,7 +36,7 @@ func Message(message models.Message, selfMessage bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 = []any{"message", templ.KV("selfMessage", selfMessage)}
+		var templ_7745c5c3_Var2 = []any{"message", templ.KV("selfMessage", selfMessage), message.Color}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
