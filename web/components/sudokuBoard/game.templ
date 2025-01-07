@@ -5,7 +5,7 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 templ Game(game *models.Game) {
     <div id="game">
         @Grid(game)
-        @NumbersBoard()
+        @NumbersBoard(game.NumbersLeft)
     </div>
 
 }

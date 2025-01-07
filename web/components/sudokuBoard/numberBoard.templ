@@ -1,9 +1,9 @@
 package components
 
-templ NumbersBoard() {
+templ NumbersBoard(numbersLeft []int) {
     <div id="numberBoard">
         for i := range(9){
-            @Number(i+1)
+            @Number(i+1, (numbersLeft[i] <= 0))
         }
     </div>
 }

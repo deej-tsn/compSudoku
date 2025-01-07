@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -17,18 +18,17 @@ import (
 
 func main() {
 
-	pathToSudoku := "sudoku.txt"
 	pathToWeb := "./web/public"
 	godotenv.Load(".env")
 	grid, err := routes.GetBoardAPI()
 	var game *models.Game
 	if err != nil {
 		log.Panicln("Cannot encode response to Object")
-		game = models.NewGame(helper.ReadFileToString(pathToSudoku))
+		game = nil
 	} else {
 		game = models.ResponseToGame(grid)
 	}
-
+	fmt.Println(game)
 	chatLog := models.NewChatLog()
 	e := echo.New()
 

@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -28,6 +30,7 @@ type (
 		Mistakes     int
 		ActiveSquare *Square
 		EditState    bool
+		NumbersLeft  []int
 	}
 
 	SudokuResponse struct {
@@ -39,41 +42,9 @@ type (
 	}
 )
 
-func (grid Grid) Print() {
-	for i := 0; i < len(grid); i++ {
-		fmt.Println(grid[i])
-	}
-}
-
-func (game Game) changeSquareValue(value int) Game {
-	if !game.ActiveSquare.Confirmed {
-		game.ActiveSquare.Value = value
-		fmt.Printf("value: %d, actual value : %d\n", value, game.ActiveSquare.ActualValue)
-		if value != game.ActiveSquare.ActualValue {
-			game.Mistakes += 1
-			fmt.Printf("Mistakes : %d\n", game.Mistakes)
-		}
-	}
-	return game
-
-}
-
-func (game Game) ChangeActiveSquare(square *Square) Game {
-	if game.ActiveSquare != nil {
-		game.ActiveSquare.Active = false
-		game.activeSquareRelated(false)
-		game.activeSquareSameValue(false)
-	}
-
-	square.Active = true
-	game.ActiveSquare = square
-	game.activeSquareRelated(true)
-	game.activeSquareSameValue(true)
-	return game
-}
+// Related Squared
 
 func (game Game) activeSquareSameValue(state bool) {
-
 	if game.ActiveSquare.Value != 0 {
 		for i := 0; i < len(game.Grid); i++ {
 			for j := 0; j < len(game.Grid[0]); j++ {
@@ -99,8 +70,7 @@ func (game Game) activeSquareRelated(state bool) {
 		game.Grid[i][activeSquare.ColumnIndex].RelatedToActive = state
 	}
 
-	// Square
-
+	// 3x3 Block
 	minRowIndex := 3 * (activeSquare.RowIndex / 3)
 	maxRowIndex := 3*(activeSquare.RowIndex/3) + 2
 
@@ -116,18 +86,79 @@ func (game Game) activeSquareRelated(state bool) {
 	activeSquare.RelatedToActive = false
 }
 
+// Update Grid
+
 func (game Game) SetActiveSquare(square *Square) *Game {
-	game = game.ChangeActiveSquare(square)
+	if game.ActiveSquare != nil {
+		game.ActiveSquare.Active = false
+		game.activeSquareRelated(false)
+		game.activeSquareSameValue(false)
+	}
+
+	square.Active = true
+	game.ActiveSquare = square
+	game.activeSquareRelated(true)
+	game.activeSquareSameValue(true)
 	return &game
 }
-func (game Game) SetActiveSquareValue(value int) *Game {
+func (game Game) SetActiveSquareValue(value int, c echo.Context) *Game {
 	game.activeSquareSameValue(false)
 
-	game = game.changeSquareValue(value)
+	if !game.ActiveSquare.Confirmed {
+		game.ActiveSquare.Value = value
+		if value != game.ActiveSquare.ActualValue {
+			game.Mistakes += 1
+			fmt.Printf("Mistakes : %d\n", game.Mistakes)
+		} else {
+			game.ActiveSquare.Confirmed = true
+			game.NumbersLeft[value-1] -= 1
+			fmt.Println(game.NumbersLeft)
+
+		}
+	}
 
 	game.activeSquareSameValue(true)
 
 	return &game
+}
+
+// Create Sudoku Board
+
+func makeNumberLeftSlice() []int {
+	NumbersLeft := make([]int, 9)
+
+	for i := 0; i < len(NumbersLeft); i++ {
+		NumbersLeft[i] = 9
+	}
+	return NumbersLeft
+}
+
+func ResponseToGame(response *SudokuResponse) *Game {
+	grid := make([]Row, 9)
+	NumbersLeft := makeNumberLeftSlice()
+	for i := 0; i < len(response.Response.Solution); i++ {
+		grid[i] = IntegerRowToSudokuRow(response.Response.UnsolvedSudoku[i], response.Response.Solution[i], i, NumbersLeft)
+	}
+	game := Game{
+		Grid:        grid,
+		Difficulty:  response.Response.Difficulty,
+		Mistakes:    0,
+		EditState:   true,
+		NumbersLeft: NumbersLeft,
+	}
+	return &game
+}
+
+func IntegerRowToSudokuRow(unsolvedRow []int, solvedRow []int, rowIndex int, numbersLeft []int) Row {
+	row := make([]*Square, 9)
+	for i := 0; i < 9; i++ {
+		row[i] = createSquare(rowIndex, i, unsolvedRow[i], solvedRow[i])
+		if unsolvedRow[i] == solvedRow[i] {
+			index := unsolvedRow[i] - 1
+			numbersLeft[index] = numbersLeft[index] - 1
+		}
+	}
+	return row
 }
 
 func createSquare(rowIndex int, columnIndex int, value int, actualValue int) *Square {
@@ -148,41 +179,4 @@ func createSquare(rowIndex int, columnIndex int, value int, actualValue int) *Sq
 		square.Confirmed = false
 	}
 	return &square
-}
-
-func createUnknownSquare(rowIndex int, columnIndex int) *Square {
-	square := Square{
-		RowIndex:          rowIndex,
-		ColumnIndex:       columnIndex,
-		Value:             0,
-		Confirmed:         false,
-		Potential:         []int{},
-		Active:            false,
-		Valid:             true,
-		RelatedToActive:   false,
-		SameValueToActive: false,
-	}
-	return &square
-}
-
-func ResponseToGame(response *SudokuResponse) *Game {
-	grid := make([]Row, 9)
-	for i := 0; i < len(response.Response.Solution); i++ {
-		grid[i] = IntegerRowToSudokuRow(response.Response.UnsolvedSudoku[i], response.Response.Solution[i], i)
-	}
-	game := Game{
-		Grid:       grid,
-		Difficulty: response.Response.Difficulty,
-		Mistakes:   0,
-		EditState:  true,
-	}
-	return &game
-}
-
-func IntegerRowToSudokuRow(unsolvedRow []int, solvedRow []int, rowIndex int) Row {
-	row := make([]*Square, 9)
-	for i := 0; i < 9; i++ {
-		row[i] = createSquare(rowIndex, i, unsolvedRow[i], solvedRow[i])
-	}
-	return row
 }

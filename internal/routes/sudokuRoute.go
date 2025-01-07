@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -46,7 +47,12 @@ func (sudoku *SudokuRoute) SetActiveSquare(c echo.Context) error {
 func (sudoku *SudokuRoute) SetActiveSquareValue(c echo.Context) error {
 	value, err := strconv.Atoi(c.FormValue("value"))
 	helper.CheckError(err)
-	sudoku.game = sudoku.game.SetActiveSquareValue(value)
+	sudoku.game = sudoku.game.SetActiveSquareValue(value, c)
+	for i := range 9 {
+		if sudoku.game.NumbersLeft[i] <= 0 {
+			components.Number(i+1, true).Render(context.Background(), c.Response().Writer)
+		}
+	}
 	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game))
 }
 
@@ -74,7 +80,6 @@ func GetBoardAPI() (*models.SudokuResponse, error) {
 
 	defer res.Body.Close()
 	body, _ := io.ReadAll(res.Body)
-	fmt.Println(string(body))
 	var response models.SudokuResponse
 	err := json.Unmarshal(body, &response)
 	return &response, err

@@ -122,6 +122,12 @@ hr {
     background-color: var(--select);
 }
 
+.disabled{
+    cursor: none;
+    background-color: #668199;
+    color: black;
+}
+
 
 .row {
     width: fit-content;
