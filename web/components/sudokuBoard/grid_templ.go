@@ -31,7 +31,7 @@ func Grid(game *models.Game) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"board\"><div id=\"extras\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"board\" hx-swap-oob=\"outerHTML:#board\"><div id=\"extras\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -3,7 +3,7 @@ package components
 import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Grid(game *models.Game) {
-    <div id="board">
+    <div id="board" hx-swap-oob="outerHTML:#board">
         <div id="extras">
             @InputType(game.EditState)
             @Mistakes(game.Mistakes)

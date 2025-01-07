@@ -1,7 +1,7 @@
 package components
 
 templ newGame() {
-    <div id="newGame">
+    <div id="newGame" hx-get="/sudoku/board/new" hx-trigger="click">
         <img src="static/assets/Plus.svg" width="70px" height="70px"/>
     </div>
 }

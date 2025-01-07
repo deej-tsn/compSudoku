@@ -106,14 +106,16 @@ func (game Game) SetActiveSquareValue(value int, c echo.Context) *Game {
 
 	if !game.ActiveSquare.Confirmed {
 		game.ActiveSquare.Value = value
-		if value != game.ActiveSquare.ActualValue {
-			game.Mistakes += 1
-			fmt.Printf("Mistakes : %d\n", game.Mistakes)
-		} else {
-			game.ActiveSquare.Confirmed = true
-			game.NumbersLeft[value-1] -= 1
-			fmt.Println(game.NumbersLeft)
+		if value != 0 {
+			if value != game.ActiveSquare.ActualValue {
+				game.Mistakes += 1
+				fmt.Printf("Mistakes : %d\n", game.Mistakes)
+			} else {
+				game.ActiveSquare.Confirmed = true
+				game.NumbersLeft[value-1] -= 1
+				fmt.Println(game.NumbersLeft)
 
+			}
 		}
 	}
 

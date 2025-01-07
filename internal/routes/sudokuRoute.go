@@ -44,6 +44,15 @@ func (sudoku *SudokuRoute) SetActiveSquare(c echo.Context) error {
 	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game))
 }
 
+func (sudoku *SudokuRoute) GetNewBoard(c echo.Context) error {
+	newGrid, err := GetBoardAPI()
+	if err != nil {
+		return c.NoContent(http.StatusBadGateway)
+	}
+	sudoku.game = models.ResponseToGame(newGrid)
+	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game))
+}
+
 func (sudoku *SudokuRoute) SetActiveSquareValue(c echo.Context) error {
 	value, err := strconv.Atoi(c.FormValue("value"))
 	helper.CheckError(err)

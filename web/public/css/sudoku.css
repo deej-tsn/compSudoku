@@ -123,7 +123,7 @@ hr {
 }
 
 .disabled{
-    cursor: none;
+    cursor: default;
     background-color: #668199;
     color: black;
 }
