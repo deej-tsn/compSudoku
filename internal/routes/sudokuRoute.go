@@ -50,7 +50,7 @@ func (sudoku *SudokuRoute) GetNewBoard(c echo.Context) error {
 		return c.NoContent(http.StatusBadGateway)
 	}
 	sudoku.game = models.ResponseToGame(newGrid)
-	return helper.Render(c, http.StatusAccepted, components.Grid(sudoku.game))
+	return helper.Render(c, http.StatusAccepted, components.Game(sudoku.game))
 }
 
 func (sudoku *SudokuRoute) SetActiveSquareValue(c echo.Context) error {

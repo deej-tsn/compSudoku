@@ -29,7 +29,7 @@ func newGame() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"newGame\" hx-get=\"/sudoku/board/new\" hx-trigger=\"click\"><img src=\"static/assets/Plus.svg\" width=\"70px\" height=\"70px\"></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"newGame\" hx-get=\"/sudoku/board/new\" hx-trigger=\"click\" hx-target=\"#game\" hx-swap=\"outerHTML\"><img src=\"static/assets/Plus.svg\" width=\"70px\" height=\"70px\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

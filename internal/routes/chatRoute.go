@@ -43,11 +43,11 @@ var (
 
 func UserConnected(c echo.Context, user WebSocketConnection) {
 	systemMessage := fmt.Sprintf("%s has connected", user.Username)
-	message := models.Message{
-		Text:   systemMessage,
-		Author: "system",
-		Color:  "purple",
-	}
+	message := *models.NewMessage(
+		systemMessage,
+		"system",
+		"purple",
+	)
 
 	bytes := messageToComponentByte(c, message, false)
 	go broadcast(c, user, bytes)
@@ -79,11 +79,7 @@ func (chatH ChatHandler) InitWs(c echo.Context) error {
 				continue
 			}
 
-			message := models.Message{
-				Text:   messageReq.Text,
-				Author: currentConn.Username,
-				Color:  currentConn.Color,
-			}
+			message := *models.NewMessage(messageReq.Text, currentConn.Username, currentConn.Color)
 
 			bytes := messageToComponentByte(c, message, false)
 			go broadcast(c, currentConn, bytes)
