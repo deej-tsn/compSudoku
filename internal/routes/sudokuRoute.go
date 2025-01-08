@@ -77,6 +77,7 @@ func (sudoku *SudokuRoute) PostFlipEditMode(c echo.Context) error {
 func GetBoardAPI() (*models.SudokuResponse, error) {
 	difficulty := 2
 	sudoku_key := os.Getenv("SUDOKU_API_KEY")
+	fmt.Println(sudoku_key)
 
 	url := fmt.Sprintf("https://sudoku-board.p.rapidapi.com/new-board?diff=%d&stype=list&solu=true", difficulty)
 

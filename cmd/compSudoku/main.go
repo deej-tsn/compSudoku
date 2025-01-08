@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/deej-tsn/compSudoku/internal/helper"
 	"github.com/deej-tsn/compSudoku/internal/models"
@@ -41,6 +42,11 @@ func main() {
 
 	// logs all http requests
 	e.Use(middleware.Logger())
+	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		PORT = ":80"
+	}
+	e.Server.Addr = PORT
 
 	// static files in public folder
 	e.Static("static", pathToWeb)
