@@ -10,7 +10,7 @@ templ Number(num int, disabled bool) {
             {strconv.Itoa(num)}
         </div>
     } else {
-        <div id={fmt.Sprintf("inputNum%d",num)} class="number" hx-post="/sudoku/active" hx-vals={fmt.Sprintf("{\"value\" : \"%d\"} ",num)} hx-swap="outerHTML" hx-target="#board" hx-trigger="click">
+        <div id={fmt.Sprintf("inputNum%d",num)} class="number" hx-post="/sudoku/htmx/active/change" hx-vals={fmt.Sprintf("{\"value\" : \"%d\"} ",num)} hx-swap="outerHTML" hx-target="#board" hx-trigger="click">
             {strconv.Itoa(num)}
         </div>
     }

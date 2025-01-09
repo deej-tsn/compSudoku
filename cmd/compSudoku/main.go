@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/deej-tsn/compSudoku/internal/helper"
 	"github.com/deej-tsn/compSudoku/internal/models"
-	"github.com/deej-tsn/compSudoku/internal/routes"
 	layoutComponents "github.com/deej-tsn/compSudoku/web/components/layout"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -21,7 +19,7 @@ func main() {
 
 	pathToWeb := "./web/public"
 	godotenv.Load(".env")
-	grid, err := routes.GetBoardAPI()
+	grid, err := helper.GetBoardAPI()
 	var game *models.Game
 	if err != nil {
 		log.Panicln("Cannot encode response to Object")
@@ -29,7 +27,6 @@ func main() {
 	} else {
 		game = models.ResponseToGame(grid)
 	}
-	fmt.Println(game)
 	chatLog := models.NewChatLog()
 	e := echo.New()
 
@@ -69,11 +66,11 @@ func main() {
 	})
 
 	//Sudoku
-	e.POST("/sudoku", sudokuController.SetActiveSquare)
-	e.POST("/sudoku/active", sudokuController.SetActiveSquareValue)
-	e.POST("/sudoku/htmx/flipEditMode", sudokuController.PostFlipEditMode)
-	e.GET("/sudoku/board", sudokuController.GetBoard)
-	e.GET("/sudoku/board/new", sudokuController.GetNewBoard)
+	e.POST("/sudoku/htmx/active", sudokuController.POSTActiveSquare)
+	e.POST("/sudoku/htmx/active/change", sudokuController.POSTActiveSquareValue)
+	e.POST("/sudoku/htmx/flipEditMode", sudokuController.POSTFlipEditMode)
+	e.GET("/sudoku/htmx/board", sudokuController.GETBoard)
+	e.GET("/sudoku/htmx/board/new", sudokuController.GETNewBoard)
 
 	// CHATS
 	e.GET("/chats", chatController.InitWs)

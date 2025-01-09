@@ -19,13 +19,6 @@ type (
 		ChatLog *models.ChatLog
 	}
 
-	WebSocketConnection struct {
-		*websocket.Conn
-		SignedIn bool
-		Username string
-		Color    string
-	}
-
 	SocketResponse struct {
 		From    string
 		Type    string

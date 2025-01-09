@@ -7,12 +7,23 @@
 }
 
 #setting {
-    height: 100%;
-    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20rem;
+    width: 10rem;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     background-color:var(--tritary);
+}
+
+#setting.open{
+    top: 0;
+}
+
+#setting.closed {
+    top : -20rem;
 }
 
 #blurScreen{
@@ -20,7 +31,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     backdrop-filter: blur(10px);
 }
 
@@ -132,7 +143,7 @@
     aspect-ratio: 1;
     border-radius: 100px;
     background-color: var(--selected);
-    background-image: url(/assets/Plus.svg);
+    background-image: url(../../assets/Plus.svg);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,4 +153,20 @@
     img {
         filter: invert(1);
     }
+}
+
+/* Medium Screen */
+@media (min-width: 768px) {
+
+    #setting {
+        position: inherit;
+        height: 100%;
+        width: 100%;
+    }
+
+
+}
+/* Large Screen */
+@media (min-width: 1025px) {
+
 }
