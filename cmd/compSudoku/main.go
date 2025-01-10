@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,14 +13,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	sudokuRoutes "github.com/deej-tsn/compSudoku/internal/routes"
+	routes "github.com/deej-tsn/compSudoku/internal/routes"
 )
 
 func main() {
 
 	pathToWeb := "./web/public"
 	godotenv.Load(".env")
-	grid, err := helper.GetBoardAPI()
+	grid, err := helper.GetBoardAPI("2")
 	var game *models.Game
 	if err != nil {
 		log.Panicln("Cannot encode response to Object")
@@ -32,8 +33,7 @@ func main() {
 
 	//CONTROLLERS
 
-	sudokuController := sudokuRoutes.NewSudokuRoute(game)
-	chatController := sudokuRoutes.NewChatHander(*chatLog)
+	wsController := routes.NewWebSocketHandler(game, chatLog)
 
 	// MIDDLEWARE
 
@@ -62,19 +62,13 @@ func main() {
 
 	///HOME
 	e.GET("/", func(c echo.Context) error {
-		return helper.Render(c, http.StatusOK, layoutComponents.Index("Sudoku", game, chatLog))
+		fmt.Println(game.State)
+		return helper.Render(c, http.StatusOK, layoutComponents.Index("Sudoku", wsController.Game, wsController.ChatLog))
 	})
 
 	//Sudoku
-	e.POST("/sudoku/htmx/active", sudokuController.POSTActiveSquare)
-	e.POST("/sudoku/htmx/active/change", sudokuController.POSTActiveSquareValue)
-	e.POST("/sudoku/htmx/flipEditMode", sudokuController.POSTFlipEditMode)
-	e.GET("/sudoku/htmx/board", sudokuController.GETBoard)
-	e.GET("/sudoku/htmx/board/new", sudokuController.GETNewBoard)
 
-	// CHATS
-	e.GET("/chats", chatController.InitWs)
-	e.POST("/messages", chatController.PostMessage)
+	e.GET("/sudoku", wsController.InitWs)
 
 	e.Logger.Fatal(e.Start(":8080"))
 

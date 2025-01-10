@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/deej-tsn/compSudoku/internal/models"
 import "fmt"
+import "github.com/deej-tsn/compSudoku/internal/helper"
 
 func Square(square models.Square) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -34,27 +35,27 @@ func Square(square models.Square) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		if square.Active {
 			if square.Confirmed {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"activeSquare\" class=\"square\" hx-post=\"/sudoku/htmx/active\" hx-vals=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"activeSquare\" class=\"square\" ws-send data-ws=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var2 string
-				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}", square.Value, square.RowIndex, square.ColumnIndex))
+				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(helper.ActiveSquareFormat(square))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 9, Col: 200}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 10, Col: 100}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"click\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-ext=\"wsSend\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"click\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", square.Value))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 10, Col: 51}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 11, Col: 51}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -83,7 +84,7 @@ func Square(square models.Square) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-post=\"/sudoku/htmx/active/change\" hx-vals=\"js:{value:event.detail.lastKey}\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"newValue\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" ws-send hx-ext=\"wsSend\" hx-swap=\"outerHTML\" hx-target=\"#board\" hx-trigger=\"newValue\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -91,7 +92,7 @@ func Square(square models.Square) templ.Component {
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", square.Value))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 15, Col: 51}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 16, Col: 51}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -122,14 +123,14 @@ func Square(square models.Square) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-post=\"/sudokuhtmx/active\" hx-vals=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" ws-send hx-ext=\"wsSend\" data-ws=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}", square.Value, square.RowIndex, square.ColumnIndex))
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(helper.ActiveSquareFormat(square))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 20, Col: 358}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 21, Col: 275}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -143,7 +144,7 @@ func Square(square models.Square) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", square.Value))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 22, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/sudokuBoard/square.templ`, Line: 23, Col: 47}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {

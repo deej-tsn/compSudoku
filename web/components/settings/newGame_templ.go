@@ -29,7 +29,7 @@ func newGame() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"newGame\" hx-get=\"/sudoku/htmx/board/new\" hx-trigger=\"click\" hx-target=\"#game\" hx-swap=\"outerHTML\"><img src=\"static/assets/Plus.svg\" width=\"70px\" height=\"70px\"></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"newGame\"><h1>Generate New Game</h1><form ws-send hx-ext=\"wsFormJSON\" data-ws=\"new_board\" hx-trigger=\"submit\" hx-target=\"#game\" hx-swap=\"outerHTML\"><label for=\"difficulty\">Difficulty:</label> <select name=\"difficultySelect\" id=\"difficultySelect\"><option value=\"1\" selected>Easy</option> <option value=\"2\">Normal</option> <option value=\"3\">Hard</option></select> <button type=\"submit\">Generate</button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

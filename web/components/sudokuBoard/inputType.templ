@@ -1,7 +1,9 @@
 package components
 
+import "github.com/deej-tsn/compSudoku/internal/helper"
+
 templ InputType(editMode bool) {
-    <div id="inputType" class={templ.KV("editMode", editMode), templ.KV("optionMode", !editMode)} hx-post="/sudoku/htmx/flipEditMode" hx-swap="outerHTML">
+    <div id="inputType" class={templ.KV("editMode", editMode), templ.KV("optionMode", !editMode)} ws-send data-ws={helper.FlipEditMode()} hx-ext="wsSend" hx-swap="outerHTML">
         <div id="inputSlider">
             
         </div>

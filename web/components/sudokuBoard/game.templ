@@ -3,8 +3,9 @@ package components
 import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Game(game *models.Game) {
-    <div id="game" hx-ws="/sudoku/ws/game">
+    <div id="game">
         @Grid(game)
+        
         @NumbersBoard(game.NumbersLeft)
     </div>
 

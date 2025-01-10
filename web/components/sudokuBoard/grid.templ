@@ -5,16 +5,22 @@ import "github.com/deej-tsn/compSudoku/internal/models"
 templ Grid(game *models.Game) {
     <div id="board">
         <div id="extras">
-            @InputType(game.EditState)
+            //@InputType(game.EditState)
             @Mistakes(game.Mistakes)
         </div>
+        if game.State == models.GAME_STATE_FAILED{
+            @FailedGame()
+        }
+        if game.State == models.GAME_STATE_COMPLETE{
+            @CompletedGame()
+        }
         <div id="grid">
             <hr class="bold">
             for i, row := range game.Grid{
                 @Row(row)
                 if i % 3 == 2{
                     <hr class="bold">
-                } else{
+                } else {
                     <hr>
                 }
             }

@@ -9,7 +9,55 @@ import (
 
 
 templ Content(game *models.Game, chat *models.ChatLog) {
-    <div id="content">
+    <script text="text/javascript">
+        htmx.defineExtension('wsSend', {
+            onEvent: function(name, event) {
+                if (name === "htmx:wsConfigSend") {
+                    event.detail.headers['Content-Type'] = "application/json"
+                    event.detail.headers['X-API-Key'] = 'sjk_xxx'
+                    let body;
+                    console.log(event);
+                    if(event.detail.elt.dataset.ws){
+                        body = JSON.parse(event.detail.elt.dataset.ws)
+                    } else if(event.detail.triggeringEvent.type === "newValue"){
+                        console.log("key press")
+                        console.log(event.detail.triggeringEvent.detail)
+                        body = {
+                            type:"set_square_value",
+                            data:{
+                                "value" :event.detail.triggeringEvent.detail.lastKey
+                            }
+                        }
+                    }
+                    event.detail.parameters = body
+                }
+            }
+        });
+
+        
+        htmx.defineExtension('wsFormJSON', {
+            onEvent: function (name, evt) {
+            if (name === "htmx:wsConfigSend") {
+                evt.detail.headers['Content-Type'] = "application/json"
+                evt.detail.headers['X-API-Key'] = 'sjk_xxx'
+                console.log(evt)
+                let message = evt.detail.parameters
+                let body = {
+                    type: evt.detail.elt.dataset.ws,
+                    data : message
+                }
+                evt.detail.parameters = body
+            }
+            }
+        });
+        /*document.addEventListener("htmx:wsConfigSend", function(event) {
+            console.log(event.detail.elt.dataset.ws)
+            if(event.detail.elt.dataset.ws){
+                event.detail.parameters = JSON.parse(event.detail.elt.dataset.ws)
+            }
+        });*/
+    </script>
+    <div id="content"  ws-connect="/sudoku" hx-ext="ws">
         @sudokuComponents.Game(game)
         <div id="sideContent">
             @chatComponents.Chatbox(*chat)

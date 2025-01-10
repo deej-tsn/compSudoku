@@ -33,6 +33,10 @@ func NumbersBoard(numbersLeft []int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		templ_7745c5c3_Err = Number(0, false).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		for i := range 9 {
 			templ_7745c5c3_Err = Number(i+1, (numbersLeft[i] <= 0)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {

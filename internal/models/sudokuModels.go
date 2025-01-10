@@ -2,8 +2,6 @@ package models
 
 import (
 	"fmt"
-
-	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -31,6 +29,8 @@ type (
 		ActiveSquare *Square
 		EditState    bool
 		NumbersLeft  []int
+		ToDisable    map[int]bool
+		State        int
 	}
 
 	SudokuResponse struct {
@@ -40,7 +40,23 @@ type (
 			UnsolvedSudoku [][]int `json:"unsolved-sudoku"`
 		} `json:"response"`
 	}
+
+	ActiveSquareJSON struct {
+		Position string `json:"position"`
+	}
+
+	SquareValueJSON struct {
+		Value string `json:"value"`
+	}
+
+	DifficultyJSON struct {
+		Difficulty string `json:"difficultySelect"`
+	}
 )
+
+var GAME_STATE_COMPLETE = 3
+var GAME_STATE_FAILED = 2
+var GAME_STATE_IN_PROGRESS = 1
 
 // Related Squared
 
@@ -101,7 +117,7 @@ func (game Game) SetActiveSquare(square *Square) *Game {
 	game.activeSquareSameValue(true)
 	return &game
 }
-func (game Game) SetActiveSquareValue(value int, c echo.Context) *Game {
+func (game Game) SetActiveSquareValue(value int) *Game {
 	game.activeSquareSameValue(false)
 
 	if !game.ActiveSquare.Confirmed {
@@ -110,11 +126,23 @@ func (game Game) SetActiveSquareValue(value int, c echo.Context) *Game {
 			if value != game.ActiveSquare.ActualValue {
 				game.Mistakes += 1
 				fmt.Printf("Mistakes : %d\n", game.Mistakes)
+				if game.Mistakes > 3 {
+					game.State = GAME_STATE_FAILED
+				}
 			} else {
+
 				game.ActiveSquare.Confirmed = true
 				game.NumbersLeft[value-1] -= 1
-				fmt.Println(game.NumbersLeft)
-
+				if game.NumbersLeft[value-1] == 0 {
+					game.ToDisable[value-1] = true
+				}
+				sum := 0
+				for i := 0; i < len(game.NumbersLeft); i++ {
+					sum += game.NumbersLeft[i]
+				}
+				if sum == 0 {
+					game.State = GAME_STATE_COMPLETE
+				}
 			}
 		}
 	}
@@ -147,6 +175,8 @@ func ResponseToGame(response *SudokuResponse) *Game {
 		Mistakes:    0,
 		EditState:   true,
 		NumbersLeft: NumbersLeft,
+		ToDisable:   make(map[int]bool),
+		State:       GAME_STATE_IN_PROGRESS,
 	}
 	return &game
 }

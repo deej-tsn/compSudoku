@@ -3,10 +3,29 @@ package components
 import "github.com/deej-tsn/compSudoku/internal/models"
 
 templ Chatlist(messages []*models.Message) {
-        <ul id="chatList" >
+    <ul id="chatList" >
             for _, message := range messages{
                 @Message(*message, false)
             }
 
-        </ul>
+     </ul>
+    <script>
+    
+        let chatlist = document.getElementById("chatList")
+         // Create a MutationObserver to monitor changes
+        const observer = new MutationObserver((mutationsList) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === "childList") {
+                // Scroll to the bottom when a new child is added
+                chatlist.scrollTo(0, chatlist.scrollHeight);
+            }
+        }
+        observer.observe(chatlist, { childList: true });
+
+        });
+
+        // Start observing the chatlist for changes
+        observer.observe(chatlist, { childList: true });
+    
+    </script>
 }

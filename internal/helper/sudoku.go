@@ -24,12 +24,10 @@ func StringToPosition(positionString string) []int {
 	return position
 }
 
-func GetBoardAPI() (*models.SudokuResponse, error) {
-	difficulty := 2
+func GetBoardAPI(difficulty string) (*models.SudokuResponse, error) {
 	sudoku_key := os.Getenv("SUDOKU_API_KEY")
-	fmt.Println(sudoku_key)
 
-	url := fmt.Sprintf("https://sudoku-board.p.rapidapi.com/new-board?diff=%d&stype=list&solu=true", difficulty)
+	url := fmt.Sprintf("https://sudoku-board.p.rapidapi.com/new-board?diff=%s&stype=list&solu=true", difficulty)
 
 	req, _ := http.NewRequest("GET", url, nil)
 

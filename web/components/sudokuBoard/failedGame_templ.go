@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func EndGame() templ.Component {
+func FailedGame() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +29,7 @@ func EndGame() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><div id=\"blurScreen\"></div><form id=\"sendUser\" hx-trigger=\"submit\" ws-send hx-on:submit=\"this.parentElement.remove()\"><input id=\"usernameInput\" name=\"username\" type=\"text\" placeholder=\"Username\" required><div id=\"userColorHolder\"><label>User Color:</label><div id=\"colorRadioHolder\"><input type=\"radio\" id=\"red\" class=\"colorRadio red\" name=\"radioColor\" value=\"red\" required> <input type=\"radio\" id=\"blue\" class=\"colorRadio blue\" name=\"radioColor\" value=\"blue\"> <input type=\"radio\" id=\"yellow\" class=\"colorRadio yellow\" name=\"radioColor\" value=\"yellow\"> <input type=\"radio\" id=\"green\" class=\"colorRadio green\" name=\"radioColor\" value=\"green\"> <input type=\"radio\" id=\"pink\" class=\"colorRadio pink\" name=\"radioColor\" value=\"pink\"> <input type=\"radio\" id=\"salmon\" class=\"colorRadio salmon\" name=\"radioColor\" value=\"salmon\"></div></div><button type=\"submit\">Join Room </button></form></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div hx-swap-oob=\"afterbegin:#grid\"><div id=\"blurScreen\"></div><div class=\"endGame\"><div><h2>Too Many Mistakes</h2><h3>good luck next time</h3></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

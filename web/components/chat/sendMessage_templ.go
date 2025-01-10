@@ -29,7 +29,7 @@ func SendMessage() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"sendMessage\" hx-trigger=\"submit\" ws-send hx-on:submit=\"this.reset()\"><input id=\"messageContent\" name=\"message\" type=\"text\" placeholder=\"send message\"> <button type=\"submit\" id=\"messageButton\">> </button></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"sendMessage\" hx-trigger=\"submit\" ws-send data-ws=\"chat_message\" hx-on:submit=\"this.reset()\" hx-ext=\"ws, wsFormJSON\"><input id=\"messageContent\" name=\"message\" type=\"text\" placeholder=\"send message\"> <button type=\"submit\" id=\"messageButton\">> </button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

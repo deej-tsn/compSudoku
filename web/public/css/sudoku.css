@@ -37,6 +37,10 @@ hr {
     align-items: center;
 }
 
+#board{
+    position: relative;
+}
+
 #inputType{
     width: 3rem;
     height: 1.5rem;
@@ -87,20 +91,31 @@ hr {
 
 
 #grid {
+    width: fit-content;
     display: flex;
     flex-direction: column;
     filter: var(--dropShadow);
     margin-bottom: 1rem;
-    
+    margin-left: auto;
+    margin-right: auto;
     
 }
 
 #numberBoard{
-    width: 100%;
+    min-width: fit-content;
+    max-width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+}
+
+#deleteNum {
+    background-image: url("../assets/Delete.svg");
+    background-position: 4px 7px;
+    background-size: 1.7rem; 
+    background-repeat: no-repeat;
+    transform: rotate(180deg);
 }
 
 .number{
@@ -128,6 +143,26 @@ hr {
     color: black;
 }
 
+.endGame{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: white;
+
+    div {
+        z-index: 200;
+        width: 50%;
+        height: 50%;
+        background-color: var(--tritary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+}
 
 .row {
     width: fit-content;

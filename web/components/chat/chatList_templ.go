@@ -41,7 +41,7 @@ func Chatlist(messages []*models.Message) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</ul>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</ul><script>\n    \n        let chatlist = document.getElementById(\"chatList\")\n         // Create a MutationObserver to monitor changes\n        const observer = new MutationObserver((mutationsList) => {\n        for (let mutation of mutationsList) {\n            if (mutation.type === \"childList\") {\n                // Scroll to the bottom when a new child is added\n                chatlist.scrollTo(0, chatlist.scrollHeight);\n            }\n        }\n        observer.observe(chatlist, { childList: true });\n\n        });\n\n        // Start observing the chatlist for changes\n        observer.observe(chatlist, { childList: true });\n    \n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
