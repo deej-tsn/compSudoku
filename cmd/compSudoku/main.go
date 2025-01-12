@@ -1,34 +1,49 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/deej-tsn/compSudoku/internal/helper"
 	"github.com/deej-tsn/compSudoku/internal/models"
 	layoutComponents "github.com/deej-tsn/compSudoku/web/components/layout"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	sudokuRoutes "github.com/deej-tsn/compSudoku/internal/routes"
+	routes "github.com/deej-tsn/compSudoku/internal/routes"
 )
 
 func main() {
 
-	pathToSudoku := "sudoku.txt"
 	pathToWeb := "./web/public"
-	game := models.NewGame(helper.ReadFileToString(pathToSudoku))
+	godotenv.Load(".env")
+	grid, err := helper.GetBoardAPI("2")
+	var game *models.Game
+	if err != nil {
+		log.Panicln("Cannot encode response to Object")
+		game = nil
+	} else {
+		game = models.ResponseToGame(grid)
+	}
 	chatLog := models.NewChatLog()
 	e := echo.New()
 
 	//CONTROLLERS
 
-	sudokuController := sudokuRoutes.NewSudokuRoute(game)
-	chatController := sudokuRoutes.NewChatHander(*chatLog)
+	wsController := routes.NewWebSocketHandler(game, chatLog)
 
 	// MIDDLEWARE
 
 	// logs all http requests
 	e.Use(middleware.Logger())
+	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		PORT = ":80"
+	}
+	e.Server.Addr = PORT
 
 	// static files in public folder
 	e.Static("static", pathToWeb)
@@ -47,17 +62,13 @@ func main() {
 
 	///HOME
 	e.GET("/", func(c echo.Context) error {
-		return helper.Render(c, http.StatusOK, layoutComponents.Index("Grid", game, chatLog))
+		fmt.Println(game.State)
+		return helper.Render(c, http.StatusOK, layoutComponents.Index("Sudoku", wsController.Game, wsController.ChatLog))
 	})
 
 	//Sudoku
-	e.POST("/sudoku", sudokuController.SetActiveSquare)
-	e.POST("/sudoku/active", sudokuController.SetActiveSquareValue)
-	e.GET("/sudoku/board", sudokuController.GetBoard)
 
-	// CHATS
-	e.GET("/chats", chatController.InitWs)
-	e.POST("/messages", chatController.PostMessage)
+	e.GET("/sudoku", wsController.InitWs)
 
 	e.Logger.Fatal(e.Start(":8080"))
 

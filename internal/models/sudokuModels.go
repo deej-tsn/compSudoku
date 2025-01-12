@@ -2,10 +2,6 @@ package models
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
-
-	"github.com/deej-tsn/compSudoku/internal/helper"
 )
 
 type (
@@ -13,8 +9,9 @@ type (
 		RowIndex          int
 		ColumnIndex       int
 		Value             int
+		ActualValue       int
 		Confirmed         bool
-		Potential         []int
+		Options           []bool
 		Active            bool
 		Valid             bool
 		RelatedToActive   bool
@@ -27,40 +24,43 @@ type (
 
 	Game struct {
 		Grid         Grid
+		Difficulty   string
+		Mistakes     int
 		ActiveSquare *Square
+		EditState    bool
+		NumbersLeft  []int
+		ToDisable    map[int]bool
+		State        int
+	}
+
+	SudokuResponse struct {
+		Response struct {
+			Difficulty     string  `json:"difficulty"`
+			Solution       [][]int `json:"solution"`
+			UnsolvedSudoku [][]int `json:"unsolved-sudoku"`
+		} `json:"response"`
+	}
+
+	ActiveSquareJSON struct {
+		Position string `json:"position"`
+	}
+
+	SquareValueJSON struct {
+		Value string `json:"value"`
+	}
+
+	DifficultyJSON struct {
+		Difficulty string `json:"difficultySelect"`
 	}
 )
 
-func (grid Grid) Print() {
-	for i := 0; i < len(grid); i++ {
-		fmt.Println(grid[i])
-	}
-}
+var GAME_STATE_COMPLETE = 3
+var GAME_STATE_FAILED = 2
+var GAME_STATE_IN_PROGRESS = 1
 
-func (game Game) changeSquareValue(value int) Game {
-	if !game.ActiveSquare.Confirmed {
-		game.ActiveSquare.Value = value
-	}
-	return game
-
-}
-
-func (game Game) ChangeActiveSquare(square *Square) Game {
-	if game.ActiveSquare != nil {
-		game.ActiveSquare.Active = false
-		game.activeSquareRelated(false)
-		game.activeSquareSameValue(false)
-	}
-
-	square.Active = true
-	game.ActiveSquare = square
-	game.activeSquareRelated(true)
-	game.activeSquareSameValue(true)
-	return game
-}
+// Related Squared
 
 func (game Game) activeSquareSameValue(state bool) {
-
 	if game.ActiveSquare.Value != 0 {
 		for i := 0; i < len(game.Grid); i++ {
 			for j := 0; j < len(game.Grid[0]); j++ {
@@ -86,8 +86,7 @@ func (game Game) activeSquareRelated(state bool) {
 		game.Grid[i][activeSquare.ColumnIndex].RelatedToActive = state
 	}
 
-	// Square
-
+	// 3x3 Block
 	minRowIndex := 3 * (activeSquare.RowIndex / 3)
 	maxRowIndex := 3*(activeSquare.RowIndex/3) + 2
 
@@ -103,72 +102,113 @@ func (game Game) activeSquareRelated(state bool) {
 	activeSquare.RelatedToActive = false
 }
 
+// Update Grid
+
 func (game Game) SetActiveSquare(square *Square) *Game {
-	game = game.ChangeActiveSquare(square)
+	if game.ActiveSquare != nil {
+		game.ActiveSquare.Active = false
+		game.activeSquareRelated(false)
+		game.activeSquareSameValue(false)
+	}
+
+	square.Active = true
+	game.ActiveSquare = square
+	game.activeSquareRelated(true)
+	game.activeSquareSameValue(true)
 	return &game
 }
 func (game Game) SetActiveSquareValue(value int) *Game {
-	game = game.changeSquareValue(value)
+	game.activeSquareSameValue(false)
+
+	if !game.ActiveSquare.Confirmed {
+		game.ActiveSquare.Value = value
+		if value != 0 {
+			if value != game.ActiveSquare.ActualValue {
+				game.Mistakes += 1
+				fmt.Printf("Mistakes : %d\n", game.Mistakes)
+				if game.Mistakes > 3 {
+					game.State = GAME_STATE_FAILED
+				}
+			} else {
+
+				game.ActiveSquare.Confirmed = true
+				game.NumbersLeft[value-1] -= 1
+				if game.NumbersLeft[value-1] == 0 {
+					game.ToDisable[value-1] = true
+				}
+				sum := 0
+				for i := 0; i < len(game.NumbersLeft); i++ {
+					sum += game.NumbersLeft[i]
+				}
+				if sum == 0 {
+					game.State = GAME_STATE_COMPLETE
+				}
+			}
+		}
+	}
+
+	game.activeSquareSameValue(true)
+
 	return &game
 }
 
-func NewGame(filename string) *Game {
+// Create Sudoku Board
+
+func makeNumberLeftSlice() []int {
+	NumbersLeft := make([]int, 9)
+
+	for i := 0; i < len(NumbersLeft); i++ {
+		NumbersLeft[i] = 9
+	}
+	return NumbersLeft
+}
+
+func ResponseToGame(response *SudokuResponse) *Game {
 	grid := make([]Row, 9)
-	rowsString := strings.Split(filename, "\n")
-	for i := 0; i < len(rowsString); i++ {
-		grid[i] = stringToRow(i, rowsString[i])
+	NumbersLeft := makeNumberLeftSlice()
+	for i := 0; i < len(response.Response.Solution); i++ {
+		grid[i] = IntegerRowToSudokuRow(response.Response.UnsolvedSudoku[i], response.Response.Solution[i], i, NumbersLeft)
 	}
 	game := Game{
-		Grid: grid,
+		Grid:        grid,
+		Difficulty:  response.Response.Difficulty,
+		Mistakes:    0,
+		EditState:   true,
+		NumbersLeft: NumbersLeft,
+		ToDisable:   make(map[int]bool),
+		State:       GAME_STATE_IN_PROGRESS,
 	}
 	return &game
 }
 
-func createGivenSquare(rowIndex int, columnIndex int, valueOfString int) *Square {
-	square := Square{
-		RowIndex:          rowIndex,
-		ColumnIndex:       columnIndex,
-		Value:             valueOfString,
-		Confirmed:         true,
-		Potential:         []int{},
-		Active:            false,
-		Valid:             true,
-		RelatedToActive:   false,
-		SameValueToActive: false,
-	}
-	return &square
-}
-
-func createUnknownSquare(rowIndex int, columnIndex int) *Square {
-	square := Square{
-		RowIndex:          rowIndex,
-		ColumnIndex:       columnIndex,
-		Value:             0,
-		Confirmed:         false,
-		Potential:         []int{},
-		Active:            false,
-		Valid:             true,
-		RelatedToActive:   false,
-		SameValueToActive: false,
-	}
-	return &square
-}
-
-func stringToRow(rowIndex int, rowString string) Row {
+func IntegerRowToSudokuRow(unsolvedRow []int, solvedRow []int, rowIndex int, numbersLeft []int) Row {
 	row := make([]*Square, 9)
-	removeSpaces := strings.ReplaceAll(rowString, " ", "")
-	elements := strings.Split(removeSpaces, ",")
-	for i := 0; i < len(elements); i++ {
-		var number *Square
-
-		if elements[i] != "_" {
-			conver, err := strconv.Atoi(elements[i])
-			helper.CheckError(err)
-			number = createGivenSquare(rowIndex, i, conver)
-		} else {
-			number = createUnknownSquare(rowIndex, i)
+	for i := 0; i < 9; i++ {
+		row[i] = createSquare(rowIndex, i, unsolvedRow[i], solvedRow[i])
+		if unsolvedRow[i] == solvedRow[i] {
+			index := unsolvedRow[i] - 1
+			numbersLeft[index] = numbersLeft[index] - 1
 		}
-		row[i] = number
 	}
 	return row
+}
+
+func createSquare(rowIndex int, columnIndex int, value int, actualValue int) *Square {
+	clearOptions := make([]bool, 9)
+	square := Square{
+		RowIndex:          rowIndex,
+		ColumnIndex:       columnIndex,
+		Value:             value,
+		ActualValue:       actualValue,
+		Confirmed:         true,
+		Options:           clearOptions,
+		Active:            false,
+		Valid:             true,
+		RelatedToActive:   false,
+		SameValueToActive: false,
+	}
+	if value == 0 {
+		square.Confirmed = false
+	}
+	return &square
 }

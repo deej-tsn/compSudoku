@@ -28,22 +28,94 @@ hr {
     margin-bottom: 2rem;
 }
 
+#extras{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5rem;
+    align-items: center;
+}
+
+#board{
+    position: relative;
+}
+
+#inputType{
+    width: 3rem;
+    height: 1.5rem;
+    border-radius: 20px;
+    border:2px solid white; 
+    margin-right: auto;
+    display: block;
+    position: relative;
+    transition: background-color 0.3s ease-in-out;
+
+    #inputSlider{
+        position: absolute;
+        top: 50%;
+        
+        translate: 0 -50%;
+        height: 1rem;
+        width: 1rem;
+        background-color: white;
+        border-radius: 25px;
+        transition: left 0.3s ease-in-out;
+    }
+}
+
+#inputType.optionMode{
+    
+    background-color: var(--select);
+
+    #inputSlider{
+        left: 55%;
+    }
+}
+
+#inputType.editMode{
+
+    background-color: var(--tritary);
+
+    #inputSlider{
+        left: 10%;
+    }
+}
+
+#mistakes {
+    width: fit-content;
+    font-size: larger;
+    font-weight: 600;
+    color:var(--tritary)
+}
+
 
 #grid {
+    width: fit-content;
     display: flex;
     flex-direction: column;
     filter: var(--dropShadow);
     margin-bottom: 1rem;
-    
+    margin-left: auto;
+    margin-right: auto;
     
 }
 
 #numberBoard{
-    width: 100%;
+    min-width: fit-content;
+    max-width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+}
+
+#deleteNum {
+    background-image: url("../assets/Delete.svg");
+    background-position: 4px 7px;
+    background-size: 1.7rem; 
+    background-repeat: no-repeat;
+    transform: rotate(180deg);
 }
 
 .number{
@@ -65,6 +137,32 @@ hr {
     background-color: var(--select);
 }
 
+.disabled{
+    cursor: default;
+    background-color: #668199;
+    color: black;
+}
+
+.endGame{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: white;
+
+    div {
+        z-index: 200;
+        width: 50%;
+        height: 50%;
+        background-color: var(--tritary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+}
 
 .row {
     width: fit-content;
@@ -103,13 +201,11 @@ hr {
     font-size: calc(0.8*var(--squareSize));
     transition: background-color 0.1s ease-in-out;
     color: white;
-
-
 }
 
 
 
-.isActive{
+#activeSquare{
     background-color: var(--select);
 }
 .isRelated{
@@ -118,6 +214,9 @@ hr {
 
 .isSameValue{
     background-color: var(--sameValue);
+}
+.isIncorrect {
+    color: rgb(181, 5, 5);
 }
 
 /* Medium Screen */

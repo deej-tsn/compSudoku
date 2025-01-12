@@ -1,0 +1,5 @@
+.env
+Makefile
+/web/components/**/*.go
+/tmp
+.vscode

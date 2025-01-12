@@ -2,10 +2,22 @@ package components
 
 import "strconv"
 import "fmt"
+import "github.com/deej-tsn/compSudoku/internal/helper"
 
 
-templ Number(num int) {
-    <div class="number" hx-post="/sudoku/active" hx-vals={fmt.Sprintf("{\"value\" : \"%d\"} ",num)} hx-swap="outerHTML" hx-target="#grid" hx-trigger="click">
-        {strconv.Itoa(num)}
-    </div>
+templ Number(num int, disabled bool) {
+    if num == 0 {
+        <div id="deleteNum" class="number" ws-send data-ws={helper.NumberValueFormat(num)} hx-ext="wsSend" hx-swap="outerHTML" hx-target="#board" hx-trigger="click">
+            
+        </div>
+    } else if disabled {
+        <div class="number disabled" hx-swap-oob={fmt.Sprintf("outerHTML:#inputNum%d", num)}>
+            {strconv.Itoa(num)}
+        </div>
+    } else {
+        <div id={fmt.Sprintf("inputNum%d",num)} class="number" ws-send data-ws={helper.NumberValueFormat(num)} hx-ext="wsSend" hx-swap="outerHTML" hx-target="#board" hx-trigger="click">
+            {strconv.Itoa(num)}
+        </div>
+    }
+
 }

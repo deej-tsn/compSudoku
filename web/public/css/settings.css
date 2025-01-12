@@ -1,18 +1,38 @@
+:root {
 
+	font-family: "Roboto", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+    --selected : #537fa3;
+}
 
 #setting {
-    height: 100%;
-    width: 100%;
-
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20rem;
+    width: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
     background-color:var(--tritary);
+}
+
+#setting.open{
+    top: 0;
+}
+
+#setting.closed {
+    top : -20rem;
 }
 
 #blurScreen{
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
     backdrop-filter: blur(10px);
 }
 
@@ -31,7 +51,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 300;
     color: white;
     border: 2px white;
 
@@ -46,9 +66,7 @@
         display: flex;
         justify-content: space-evenly;
 
-        #redRadio{
-            accent-color:#964734
-        }
+
     }
 
     .colorRadio{
@@ -83,4 +101,104 @@
         border-radius: 10px;
         filter: var(--dropShadow);
     }
+}
+
+.red{
+    accent-color:#964734;
+    background-color: #964734;
+
+}
+
+
+.blue{
+    accent-color:#343c96;
+    background-color: #343c96;
+}
+
+
+.yellow{
+    accent-color:#8f9634;
+    background-color: #8f9634;
+}
+
+
+.green{
+    accent-color:#399634;
+    background-color: #399634;
+}
+
+
+.pink{
+    accent-color:#96347a;
+    background-color: #96347a;
+}
+
+
+.salmon{
+    accent-color:#963450;
+    background-color: #963450;
+}
+
+#newGame{
+    width:  90%;
+    height: fit-content;
+    background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    filter: var(--dropShadow);
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    z-index: 0;
+    
+    h1 {
+        font-size: large;
+        color: white;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        label{
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: large;
+            font-weight: 400;
+        }
+
+        select{
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        button {
+            background-color: #964734;
+            border: 0;
+            width: 7rem;
+            padding: 0.5rem;
+            color: white;
+            display: block;
+        }
+
+    }
+
+
+}
+
+/* Medium Screen */
+@media (min-width: 768px) {
+
+    #setting {
+        position: inherit;
+        height: 100%;
+        width: 100%;
+    }
+
+
+}
+/* Large Screen */
+@media (min-width: 1025px) {
+
 }
