@@ -1,5 +1,5 @@
 :root{
-    --squareSize : 2.5rem;
+    --squareSize : 2rem;
     --select : #537fa3;
     --related : #668199;
     --sameValue : #4b6c8a;
@@ -31,10 +31,11 @@ hr {
 #extras{
     width: 100%;
     height: fit-content;
-    display: flex;
-    flex-direction: row;
     margin-bottom: 0.5rem;
-    align-items: center;
+}
+
+#mistakes{
+    margin: auto;
 }
 
 #board{
@@ -112,15 +113,15 @@ hr {
 
 #deleteNum {
     background-image: url("../assets/Delete.svg");
-    background-position: 4px 7px;
-    background-size: 1.7rem; 
+    background-position: 4px 5px;
+    background-size: 1.4rem; 
     background-repeat: no-repeat;
     transform: rotate(180deg);
 }
 
 .number{
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 100px;
     background-color: var(--tritary);
     display: flex;
@@ -217,6 +218,23 @@ hr {
 }
 .isIncorrect {
     color: rgb(181, 5, 5);
+}
+
+
+@media (min-width: 400px) {
+    :root{
+        --squareSize:2.5rem;
+    }
+
+    .number {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    #deleteNum{
+        background-position: 4px 7px;
+        background-size: 1.7rem; 
+    }
 }
 
 /* Medium Screen */
