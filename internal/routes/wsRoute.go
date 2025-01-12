@@ -141,7 +141,8 @@ func (wsHandler *WebSocketHandler) handleChatMessage(c echo.Context, currentConn
 	}
 
 	message := *models.NewMessage(messageReq.Text, currentConn.Username, currentConn.Color)
-	wsHandler.ChatLog.Messages = append(wsHandler.ChatLog.Messages, &message)
+	// uncomment to store chat messages
+	//wsHandler.ChatLog.Messages = append(wsHandler.ChatLog.Messages, &message)
 	c.Response().Header().Set("HX-Trigger", "newMessage")
 	bytes := wsHandler.renderChatMessage(c, message, true)
 	if err := currentConn.Conn.WriteMessage(websocket.TextMessage, bytes); err != nil {
