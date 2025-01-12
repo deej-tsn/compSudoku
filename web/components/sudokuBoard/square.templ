@@ -6,19 +6,6 @@ import "github.com/deej-tsn/compSudoku/internal/helper"
 
 templ Square(square models.Square) {
     if square.Active {
-<<<<<<< HEAD
-        if square.Value > 0{
-             <div id="activeSquare" class="square isActive" hx-post="/sudoku/active" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\"", square.Value)} hx-swap="outerHTML" hx-target="#grid" hx-trigger="click, newValue"> 
-                {fmt.Sprintf("%d",square.Value)}
-            </div>
-        }else{
-            <div id="activeSquare" class="square isActive" hx-post="/sudoku/active" hx-vals="js:{value:event.detail.lastKey}" hx-swap="outerHTML" hx-target="#grid" hx-trigger="click, newValue"> 
-            </div>
-        }
-
-    } else{
-        <div class={"square", templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive)} hx-post="/sudoku" hx-vals={fmt.Sprintf("{ \"value\" : \"%d\" , \"position\" : \"%d,%d\"}",square.Value,square.RowIndex,square.ColumnIndex) } hx-swap="outerHTML" hx-target="#grid" hx-trigger="click"> 
-=======
         if square.Confirmed {
             <div id="activeSquare" class="square" ws-send data-ws={helper.ActiveSquareFormat(square)} hx-ext="wsSend" hx-swap="outerHTML" hx-target="#board" hx-trigger="click"> 
                     {fmt.Sprintf("%d",square.Value)}
@@ -32,7 +19,6 @@ templ Square(square models.Square) {
         } 
     } else {
         <div class={"square", templ.KV("isRelated", square.RelatedToActive), templ.KV("isSameValue", square.SameValueToActive), templ.KV("isIncorrect", square.Value > 0 && square.Value != square.ActualValue)} ws-send hx-ext="wsSend" data-ws={helper.ActiveSquareFormat(square)} hx-swap="outerHTML" hx-target="#board" hx-trigger="click"> 
->>>>>>> wsSudoku
             if square.Value > 0 {
                 {fmt.Sprintf("%d",square.Value)}
             }

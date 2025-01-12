@@ -1,5 +1,5 @@
 .env
 Makefile
 /web/components/**/*.go
-/tmp
+tmp/
 .vscode
