@@ -3,3 +3,4 @@ Makefile
 /web/components/**/*.go
 tmp/
 .vscode
+.DS_Store
