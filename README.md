@@ -81,6 +81,8 @@ compSudoku/
 
 ### Setup
 
+0. Get API Key for RapidSudoku at https://rapidapi.com/andrewarochukwu/api/sudoku-board (free)
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/compSudoku.git
@@ -103,12 +105,10 @@ compSudoku/
     air -c .air.toml
     ```
 
-5. Create Makefile to root file:
-    ```bash
-    touch Makefile
-    # add the following to makefile
-    #   run:
-	#       templ generate && go build -o ./tmp/main cmd/compSudoku/main.go
+5. Create `Makefile` in root folder and add the following:
+    ```
+    run:
+	    templ generate && go build -o ./tmp/main cmd/compSudoku/main.go
     ```
 
 6. Set up environment variables:
