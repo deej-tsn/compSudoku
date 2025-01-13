@@ -2,6 +2,8 @@
 
 `compSudoku` is a web-based Sudoku game with real-time chat and customizable difficulty settings. It is built using Go, Echo framework, and templ for efficient rendering and real-time interactions.
 
+## [Demo](https://sudoku.dempseypalaciotascon.com)
+
 ## Features
 
 - **Interactive Sudoku Game**: Solve Sudoku puzzles of varying difficulty.
