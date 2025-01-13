@@ -55,6 +55,10 @@ body {
         width: 20rem;
     }
 
+    body{
+        overflow-y: hidden;
+    }
+
 
 }
 /* Large Screen */
