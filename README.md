@@ -98,13 +98,26 @@ compSudoku/
    go install github.com/a-h/templ/cmd/templ@latest
    ```
 
-4. Set up environment variables:
+4. Set the toml file for air:
+    ```bash
+    air -c .air.toml
+    ```
+
+5. Create Makefile to root file:
+    ```bash
+    touch Makefile
+    # add the following to makefile
+    #   run:
+	#       templ generate && go build -o ./tmp/main cmd/compSudoku/main.go
+    ```
+
+6. Set up environment variables:
    Create a `.env` file in the root directory and define:
    ```
    SUDOKU_API_KEY=<your-api-key>
    ```
 
-5. Run the application with hot reloading:
+6. Run the application with hot reloading:
    ```bash
    air
    ```
